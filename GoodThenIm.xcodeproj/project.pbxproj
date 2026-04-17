@@ -1,0 +1,504 @@
+// !$*UTF8*$!
+{
+  archiveVersion = 1;
+  classes = {
+  };
+  objectVersion = 56;
+  objects = {
+
+    /* Begin PBXBuildFile section */
+    4B089532D1EF67AC /* EVADataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD379C02FA581E46; };
+    BD2E78F1456AC390 /* AppStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB3C9F8A4E10675; };
+    493A8CB5721D60EF /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D621B30EA5C478F; };
+    9C37BE42150FD8A6 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A297DE83C456FB; };
+    CBF05E3189247A6D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = F7352B4186CE90AD; };
+    E4265B9F018D7CA3 /* GoodThenImTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56BA10783C4D9F2; };
+    D34AB6097E812CF5 /* GoodThenImUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361DB0457FE89C2A; };
+    C71034DEBF62A859 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D251F340BE7CA96; };
+    /* End PBXBuildFile section */
+
+    /* Begin PBXFileReference section */
+    4B28C176D0A35E9F /* GoodThenIm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GoodThenIm.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+    BD379C02FA581E46 /* EVADataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EVADataModels.swift"; sourceTree = "<group>"; };
+    2DB3C9F8A4E10675 /* AppStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStateManager.swift"; sourceTree = "<group>"; };
+    9D621B30EA5C478F /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainTabView.swift"; sourceTree = "<group>"; };
+    01A297DE83C456FB /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlView.swift"; sourceTree = "<group>"; };
+    F7352B4186CE90AD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text.markdown; path = "README.md"; sourceTree = "<group>"; };
+    E56BA10783C4D9F2 /* GoodThenImTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoodThenImTests.swift"; sourceTree = "<group>"; };
+    361DB0457FE89C2A /* GoodThenImUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoodThenImUITests.swift"; sourceTree = "<group>"; };
+    9E0A34F78162BD5C /* GoodThenImTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GoodThenImTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+    08AF6C51E72D43B9 /* GoodThenImUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GoodThenImUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+    8D251F340BE7CA96 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+    /* End PBXFileReference section */
+
+    /* Begin PBXFrameworksBuildPhase section */
+    83AD465E1B9C20F7 /* Frameworks */ = {
+      isa = PBXFrameworksBuildPhase;
+      buildActionMask = 2147483647;
+      files = (
+        C71034DEBF62A859 /* SwiftUI.framework in Frameworks */
+      );
+      runOnlyForDeploymentPostprocessing = 0;
+    };
+    7A58D3EF0B4126C9 /* Frameworks */ = {
+      isa = PBXFrameworksBuildPhase;
+      buildActionMask = 2147483647;
+      files = (
+      );
+      runOnlyForDeploymentPostprocessing = 0;
+    };
+    0B3614DF728A9C5E /* Frameworks */ = {
+      isa = PBXFrameworksBuildPhase;
+      buildActionMask = 2147483647;
+      files = (
+      );
+      runOnlyForDeploymentPostprocessing = 0;
+    };
+    /* End PBXFrameworksBuildPhase section */
+
+    /* Begin PBXGroup section */
+    08A19E24B673CDF5 /* Main Group */ = {
+      isa = PBXGroup;
+      children = (
+        2BF71E54A0396C8D /* GoodThenIm */,
+        8BE73A1694D05FC2 /* GoodThenImTests */,
+        730619EDF42AC85B /* GoodThenImUITests */,
+        0819437ECD25AF6B /* Products */
+      );
+      sourceTree = "<group>";
+    };
+    2BF71E54A0396C8D /* GoodThenIm */ = {
+      isa = PBXGroup;
+      children = (
+        BD379C02FA581E46,
+        2DB3C9F8A4E10675,
+        9D621B30EA5C478F,
+        01A297DE83C456FB,
+        F7352B4186CE90AD
+      );
+      path = "GoodThenIm";
+      sourceTree = "<group>";
+    };
+    
+    8BE73A1694D05FC2 /* GoodThenImTests */ = {
+      isa = PBXGroup;
+      children = (
+        E56BA10783C4D9F2 /* GoodThenImTests.swift */
+      );
+      path = "GoodThenImTests";
+      sourceTree = "<group>";
+    };
+    730619EDF42AC85B /* GoodThenImUITests */ = {
+      isa = PBXGroup;
+      children = (
+        361DB0457FE89C2A /* GoodThenImUITests.swift */
+      );
+      path = "GoodThenImUITests";
+      sourceTree = "<group>";
+    };
+    0819437ECD25AF6B /* Products */ = {
+      isa = PBXGroup;
+      children = (
+        4B28C176D0A35E9F /* GoodThenIm.app */,
+        9E0A34F78162BD5C /* GoodThenImTests.xctest */,
+        08AF6C51E72D43B9 /* GoodThenImUITests.xctest */
+      );
+      name = Products;
+      sourceTree = "<group>";
+    };
+    /* End PBXGroup section */
+
+    /* Begin PBXNativeTarget section */
+    EB32AD749C61F805 /* GoodThenIm */ = {
+      isa = PBXNativeTarget;
+      buildConfigurationList = 3AF809516E42D7BC /* Build configuration list for PBXNativeTarget "GoodThenIm" */;
+      buildPhases = (
+        C05824B76F39E1AD /* Sources */,
+        83AD465E1B9C20F7 /* Frameworks */
+      );
+      buildRules = (
+      );
+      dependencies = (
+      );
+      name = "GoodThenIm";
+      productName = "GoodThenIm";
+      productReference = 4B28C176D0A35E9F /* GoodThenIm.app */;
+      productType = "com.apple.product-type.application";
+    };
+    0FE4C5182B369A7D /* GoodThenImTests */ = {
+      isa = PBXNativeTarget;
+      buildConfigurationList = B05F1782DC9EA463 /* Build configuration list for PBXNativeTarget "GoodThenImTests" */;
+      buildPhases = (
+        D6FC357802941EAB /* Sources */,
+        7A58D3EF0B4126C9 /* Frameworks */
+      );
+      buildRules = (
+      );
+      dependencies = (
+        0C59A324718FE6BD /* PBXTargetDependency */
+      );
+      name = "GoodThenImTests";
+      productName = "GoodThenImTests";
+      productReference = 9E0A34F78162BD5C /* GoodThenImTests.xctest */;
+      productType = "com.apple.product-type.bundle.unit-test";
+    };
+    B21AC6390ED45F87 /* GoodThenImUITests */ = {
+      isa = PBXNativeTarget;
+      buildConfigurationList = 876D5FA4321EB09C /* Build configuration list for PBXNativeTarget "GoodThenImUITests" */;
+      buildPhases = (
+        0E84C1AD37652BF9 /* Sources */,
+        0B3614DF728A9C5E /* Frameworks */
+      );
+      buildRules = (
+      );
+      dependencies = (
+        F2368B7A459E1D0C /* PBXTargetDependency */
+      );
+      name = "GoodThenImUITests";
+      productName = "GoodThenImUITests";
+      productReference = 08AF6C51E72D43B9 /* GoodThenImUITests.xctest */;
+      productType = "com.apple.product-type.bundle.ui-testing";
+    };
+    /* End PBXNativeTarget section */
+
+    /* Begin PBXProject section */
+    E31BD95F846072AC /* Project object */ = {
+      isa = PBXProject;
+      attributes = {
+        LastSwiftUpdateCheck = 1500;
+        LastUpgradeCheck = 1500;
+        TargetAttributes = {
+          EB32AD749C61F805 = {
+            CreatedOnToolsVersion = 15.0;
+          };
+          0FE4C5182B369A7D = {
+            CreatedOnToolsVersion = 15.0;
+            TestTargetID = EB32AD749C61F805;
+          };
+          B21AC6390ED45F87 = {
+            CreatedOnToolsVersion = 15.0;
+            TestTargetID = EB32AD749C61F805;
+          };
+        };
+      };
+      buildConfigurationList = F659172B40C3EDA8 /* Build configuration list for PBXProject "GoodThenIm" */;
+      compatibilityVersion = "Xcode 14.0";
+      developmentRegion = en;
+      hasScannedForEncodings = 0;
+      knownRegions = (
+        en,
+        Base
+      );
+      mainGroup = 08A19E24B673CDF5;
+      productRefGroup = 0819437ECD25AF6B /* Products */;
+      projectDirPath = "";
+      projectRoot = "";
+      targets = (
+        EB32AD749C61F805 /* GoodThenIm */,
+        0FE4C5182B369A7D /* GoodThenImTests */,
+        B21AC6390ED45F87 /* GoodThenImUITests */
+      );
+    };
+    /* End PBXProject section */
+
+    /* Begin PBXSourcesBuildPhase section */
+    C05824B76F39E1AD /* Sources */ = {
+      isa = PBXSourcesBuildPhase;
+      buildActionMask = 2147483647;
+      files = (
+        4B089532D1EF67AC,
+        BD2E78F1456AC390,
+        493A8CB5721D60EF,
+        9C37BE42150FD8A6,
+        CBF05E3189247A6D
+      );
+      runOnlyForDeploymentPostprocessing = 0;
+    };
+    D6FC357802941EAB /* Sources */ = {
+      isa = PBXSourcesBuildPhase;
+      buildActionMask = 2147483647;
+      files = (
+        E4265B9F018D7CA3 /* GoodThenImTests.swift in Sources */
+      );
+      runOnlyForDeploymentPostprocessing = 0;
+    };
+    0E84C1AD37652BF9 /* Sources */ = {
+      isa = PBXSourcesBuildPhase;
+      buildActionMask = 2147483647;
+      files = (
+        D34AB6097E812CF5 /* GoodThenImUITests.swift in Sources */
+      );
+      runOnlyForDeploymentPostprocessing = 0;
+    };
+    /* End PBXSourcesBuildPhase section */
+
+    /* Begin PBXContainerItemProxy section */
+    30761F4A8EBD9C52 /* PBXContainerItemProxy */ = {
+      isa = PBXContainerItemProxy;
+      containerPortal = E31BD95F846072AC /* Project object */;
+      proxyType = 1;
+      remoteGlobalIDString = EB32AD749C61F805;
+      remoteInfo = "GoodThenIm";
+    };
+    B794532FC6E1D80A /* PBXContainerItemProxy */ = {
+      isa = PBXContainerItemProxy;
+      containerPortal = E31BD95F846072AC /* Project object */;
+      proxyType = 1;
+      remoteGlobalIDString = EB32AD749C61F805;
+      remoteInfo = "GoodThenIm";
+    };
+    /* End PBXContainerItemProxy section */
+
+    /* Begin PBXTargetDependency section */
+    0C59A324718FE6BD /* PBXTargetDependency */ = {
+      isa = PBXTargetDependency;
+      target = EB32AD749C61F805 /* GoodThenIm */;
+      targetProxy = 30761F4A8EBD9C52 /* PBXContainerItemProxy */;
+    };
+    F2368B7A459E1D0C /* PBXTargetDependency */ = {
+      isa = PBXTargetDependency;
+      target = EB32AD749C61F805 /* GoodThenIm */;
+      targetProxy = B794532FC6E1D80A /* PBXContainerItemProxy */;
+    };
+    /* End PBXTargetDependency section */
+
+    /* Begin XCBuildConfiguration section */
+    3621BADEF87C5094 /* Debug */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        ALWAYS_SEARCH_USER_PATHS = NO;
+        ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+        CLANG_ANALYZER_NONNULL = YES;
+        CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+        CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+        CLANG_ENABLE_MODULES = YES;
+        CLANG_ENABLE_OBJC_ARC = YES;
+        CLANG_ENABLE_OBJC_WEAK = YES;
+        CODE_SIGN_STYLE = Automatic;
+        CURRENT_PROJECT_VERSION = 1;
+        DEVELOPMENT_ASSET_PATHS = "";
+        DEVELOPMENT_TEAM = "";
+        ENABLE_PREVIEWS = YES;
+        ENABLE_STRICT_OBJC_MSGSEND = YES;
+        ENABLE_TESTABILITY = YES;
+        FRAMEWORK_SEARCH_PATHS = (
+          "$(inherited)",
+          "$(SDKROOT)/System/Library/Frameworks"
+        );
+        GCC_C_LANGUAGE_STANDARD = gnu11;
+        GCC_DYNAMIC_NO_PIC = NO;
+        GCC_NO_COMMON_BLOCKS = YES;
+        GCC_OPTIMIZATION_LEVEL = 0;
+        GCC_PREPROCESSOR_DEFINITIONS = (
+          "DEBUG=1",
+          "$(inherited)",
+        );
+        GENERATE_INFOPLIST_FILE = YES;
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+        INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+        IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+        LD_RUNPATH_SEARCH_PATHS = (
+          "$(inherited)",
+          "@executable_path/Frameworks",
+        );
+        MARKETING_VERSION = 1.0;
+        MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+        MTL_FAST_MATH = YES;
+        ONLY_ACTIVE_ARCH = YES;
+        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim";
+        PRODUCT_NAME = "$(TARGET_NAME)";
+        SDKROOT = iphoneos;
+        SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+        SUPPORTS_MACCATALYST = NO;
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+        SWIFT_EMIT_LOC_STRINGS = YES;
+        SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+        SWIFT_VERSION = 5.0;
+        TARGETED_DEVICE_FAMILY = "1,2";
+      };
+      name = Debug;
+    };
+    FC3156EDB02847A9 /* Release */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        ALWAYS_SEARCH_USER_PATHS = NO;
+        ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+        CLANG_ANALYZER_NONNULL = YES;
+        CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+        CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+        CLANG_ENABLE_MODULES = YES;
+        CLANG_ENABLE_OBJC_ARC = YES;
+        CLANG_ENABLE_OBJC_WEAK = YES;
+        CODE_SIGN_STYLE = Automatic;
+        COPY_PHASE_STRIP = NO;
+        CURRENT_PROJECT_VERSION = 1;
+        DEVELOPMENT_ASSET_PATHS = "";
+        DEVELOPMENT_TEAM = "";
+        ENABLE_NS_ASSERTIONS = NO;
+        ENABLE_PREVIEWS = YES;
+        ENABLE_STRICT_OBJC_MSGSEND = YES;
+        FRAMEWORK_SEARCH_PATHS = (
+          "$(inherited)",
+          "$(SDKROOT)/System/Library/Frameworks"
+        );
+        GCC_C_LANGUAGE_STANDARD = gnu11;
+        GCC_NO_COMMON_BLOCKS = YES;
+        GENERATE_INFOPLIST_FILE = YES;
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+        INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+        IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+        LD_RUNPATH_SEARCH_PATHS = (
+          "$(inherited)",
+          "@executable_path/Frameworks",
+        );
+        MARKETING_VERSION = 1.0;
+        MTL_ENABLE_DEBUG_INFO = NO;
+        MTL_FAST_MATH = YES;
+        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim";
+        PRODUCT_NAME = "$(TARGET_NAME)";
+        SDKROOT = iphoneos;
+        SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+        SUPPORTS_MACCATALYST = NO;
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+        SWIFT_COMPILATION_MODE = wholemodule;
+        SWIFT_EMIT_LOC_STRINGS = YES;
+        SWIFT_OPTIMIZATION_LEVEL = "-O";
+        SWIFT_VERSION = 5.0;
+        TARGETED_DEVICE_FAMILY = "1,2";
+        VALIDATE_PRODUCT = YES;
+      };
+      name = Release;
+    };
+    BE71CD80546F39A2 /* Debug */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        BUNDLE_LOADER = "$(TEST_HOST)";
+        CODE_SIGN_STYLE = Automatic;
+        CURRENT_PROJECT_VERSION = 1;
+        GENERATE_INFOPLIST_FILE = YES;
+        IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+        MARKETING_VERSION = 1.0;
+        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim.Tests";
+        PRODUCT_NAME = "$(TARGET_NAME)";
+        SDKROOT = iphoneos;
+        SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+        SUPPORTS_MACCATALYST = NO;
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+        SWIFT_EMIT_LOC_STRINGS = NO;
+        SWIFT_VERSION = 5.0;
+        TARGETED_DEVICE_FAMILY = "1,2";
+        TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoodThenIm.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GoodThenIm";
+      };
+      name = Debug;
+    };
+    5837B9D2A6140EFC /* Release */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        BUNDLE_LOADER = "$(TEST_HOST)";
+        CODE_SIGN_STYLE = Automatic;
+        CURRENT_PROJECT_VERSION = 1;
+        GENERATE_INFOPLIST_FILE = YES;
+        IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+        MARKETING_VERSION = 1.0;
+        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim.Tests";
+        PRODUCT_NAME = "$(TARGET_NAME)";
+        SDKROOT = iphoneos;
+        SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+        SUPPORTS_MACCATALYST = NO;
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+        SWIFT_EMIT_LOC_STRINGS = NO;
+        SWIFT_VERSION = 5.0;
+        TARGETED_DEVICE_FAMILY = "1,2";
+        TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoodThenIm.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GoodThenIm";
+        VALIDATE_PRODUCT = YES;
+      };
+      name = Release;
+    };
+    609751D8E2B3FC4A /* Debug */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        CODE_SIGN_STYLE = Automatic;
+        CURRENT_PROJECT_VERSION = 1;
+        GENERATE_INFOPLIST_FILE = YES;
+        MARKETING_VERSION = 1.0;
+        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim.UITests";
+        PRODUCT_NAME = "$(TARGET_NAME)";
+        SDKROOT = iphoneos;
+        SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+        SUPPORTS_MACCATALYST = NO;
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+        SWIFT_EMIT_LOC_STRINGS = NO;
+        SWIFT_VERSION = 5.0;
+        TARGETED_DEVICE_FAMILY = "1,2";
+        TEST_TARGET_NAME = GoodThenIm;
+      };
+      name = Debug;
+    };
+    C7134F9D056B2E8A /* Release */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        CODE_SIGN_STYLE = Automatic;
+        CURRENT_PROJECT_VERSION = 1;
+        GENERATE_INFOPLIST_FILE = YES;
+        MARKETING_VERSION = 1.0;
+        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim.UITests";
+        PRODUCT_NAME = "$(TARGET_NAME)";
+        SDKROOT = iphoneos;
+        SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+        SUPPORTS_MACCATALYST = NO;
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+        SWIFT_EMIT_LOC_STRINGS = NO;
+        SWIFT_VERSION = 5.0;
+        TARGETED_DEVICE_FAMILY = "1,2";
+        TEST_TARGET_NAME = GoodThenIm;
+        VALIDATE_PRODUCT = YES;
+      };
+      name = Release;
+    };
+    /* End XCBuildConfiguration section */
+
+    /* Begin XCConfigurationList section */
+    F659172B40C3EDA8 /* Build configuration list for PBXProject "GoodThenIm" */ = {
+      isa = XCConfigurationList;
+      buildConfigurations = (
+        3621BADEF87C5094 /* Debug */,
+        FC3156EDB02847A9 /* Release */
+      );
+      defaultConfigurationIsVisible = 0;
+      defaultConfigurationName = Release;
+    };
+    3AF809516E42D7BC /* Build configuration list for PBXNativeTarget "GoodThenIm" */ = {
+      isa = XCConfigurationList;
+      buildConfigurations = (
+        3621BADEF87C5094 /* Debug */,
+        FC3156EDB02847A9 /* Release */
+      );
+      defaultConfigurationIsVisible = 0;
+      defaultConfigurationName = Release;
+    };
+    B05F1782DC9EA463 /* Build configuration list for PBXNativeTarget "GoodThenImTests" */ = {
+      isa = XCConfigurationList;
+      buildConfigurations = (
+        BE71CD80546F39A2 /* Debug */,
+        5837B9D2A6140EFC /* Release */
+      );
+      defaultConfigurationIsVisible = 0;
+      defaultConfigurationName = Release;
+    };
+    876D5FA4321EB09C /* Build configuration list for PBXNativeTarget "GoodThenImUITests" */ = {
+      isa = XCConfigurationList;
+      buildConfigurations = (
+        609751D8E2B3FC4A /* Debug */,
+        C7134F9D056B2E8A /* Release */
+      );
+      defaultConfigurationIsVisible = 0;
+      defaultConfigurationName = Release;
+    };
+    /* End XCConfigurationList section */
+
+  };
+  rootObject = E31BD95F846072AC /* Project object */;
+}
