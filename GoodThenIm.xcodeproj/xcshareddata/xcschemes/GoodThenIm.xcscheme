@@ -3,7 +3,7 @@
    <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES">
       <BuildActionEntries>
          <BuildActionEntry buildForTesting="YES" buildForRunning="YES" buildForProfiling="YES" buildForArchiving="YES" buildForAnalyzing="YES">
-            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="06853BDECF12497A" BuildableName="GoodThenIm.app" BlueprintName="GoodThenIm" ReferencedContainer="container:GoodThenIm.xcodeproj"/>
+            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="DE5460B8732A9F1C" BuildableName="GoodThenIm.app" BlueprintName="GoodThenIm" ReferencedContainer="container:GoodThenIm.xcodeproj"/>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
@@ -13,7 +13,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "24BFD390AE671C85"
+               BlueprintIdentifier = "F63B0E17D428AC59"
                BuildableName = "GoodThenImTests.xctest"
                BlueprintName = "GoodThenImTests"
                ReferencedContainer = "container:GoodThenIm.xcodeproj">
@@ -23,7 +23,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "53B624879E1DA0CF"
+               BlueprintIdentifier = "05718BC42A96FD3E"
                BuildableName = "GoodThenImUITests.xctest"
                BlueprintName = "GoodThenImUITests"
                ReferencedContainer = "container:GoodThenIm.xcodeproj">
@@ -33,7 +33,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "06853BDECF12497A"
+            BlueprintIdentifier = "DE5460B8732A9F1C"
             BuildableName = "GoodThenIm.app"
             BlueprintName = "GoodThenIm"
             ReferencedContainer = "container:GoodThenIm.xcodeproj">
@@ -44,7 +44,7 @@
       <BuildableProductRunnable runnableDebuggingMode="0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "06853BDECF12497A"
+            BlueprintIdentifier = "DE5460B8732A9F1C"
             BuildableName = "GoodThenIm.app"
             BlueprintName = "GoodThenIm"
             ReferencedContainer = "container:GoodThenIm.xcodeproj">
@@ -56,7 +56,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "06853BDECF12497A"
+            BlueprintIdentifier = "DE5460B8732A9F1C"
             BuildableName = "GoodThenIm.app"
             BlueprintName = "GoodThenIm"
             ReferencedContainer = "container:GoodThenIm.xcodeproj">
