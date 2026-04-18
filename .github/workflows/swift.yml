@@ -1,22 +1,73 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
-name: Swift
+name: name: Smart CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  build:
-
-    runs-on: macos-latest
-
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      has_node: ${{ steps.detect.outputs.has_node }}
+      has_swift_package: ${{ steps.detect.outputs.has_swift_package }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect project types
+        id: detect
+        shell: bash
+        run: |
+          if [ -f package.json ]; then
+            echo "has_node=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_node=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [ -f Package.swift ]; then
+            echo "has_swift_package=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_swift_package=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  node_ci:
+    needs: detect
+    if: needs.detect.outputs.has_node == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests if present
+        run: npm test --if-present
+
+      - name: Run lint if present
+        run: npm run lint --if-present
+
+      - name: Run build if present
+        run: npm run build --if-present
+
+  swift_package_ci:
+    needs: detect
+    if: needs.detect.outputs.has_swift_package == 'true'
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Swift package
+        run: swift build -v
+
+      - name: Test Swift package
+        run: swift test -v
