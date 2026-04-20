@@ -1,0 +1,16 @@
+/core
+  ceo.js
+  shadow.js
+  memory.js
+/agents
+  executive/
+  workers/
+/world
+  multiplayer.js
+  sync.js
+/vision
+  stream.js
+  parser.js
+/app
+  server.js
+  client/
