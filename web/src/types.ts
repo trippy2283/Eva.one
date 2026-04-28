@@ -38,7 +38,14 @@ export interface MemoryItem {
   id: string;
   title: string;
   content: string;
-  category: 'User preference' | 'Business context' | 'Project context' | 'System instruction';
+  category:
+    | 'User preference'
+    | 'Business context'
+    | 'Project context'
+    | 'Writing style'
+    | 'Creative direction'
+    | 'Contact/context note'
+    | 'System instruction';
   isActive: boolean;
 }
 
@@ -53,5 +60,13 @@ export interface ActionLog {
   id: string;
   summary: string;
   status: ActionStatus;
+  createdAt: string;
+}
+
+export interface AISession {
+  id: string;
+  role: RoleMode;
+  title: string;
+  summary: string;
   createdAt: string;
 }

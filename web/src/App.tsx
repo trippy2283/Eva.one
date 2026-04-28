@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import {
   ActionLog,
+  AISession,
   ApprovalRequest,
   MemoryItem,
   Project,
@@ -19,6 +20,16 @@ const roles: RoleMode[] = [
   'Agentic AI Orchestrator'
 ];
 
+const memoryCategories: MemoryItem['category'][] = [
+  'User preference',
+  'Business context',
+  'Project context',
+  'Writing style',
+  'Creative direction',
+  'Contact/context note',
+  'System instruction'
+];
+
 const localId = () => Math.random().toString(36).slice(2, 10);
 const STORAGE_KEY = 'evaoneai-web-v1-state';
 
@@ -28,6 +39,7 @@ type AppLocalState = {
   memory: MemoryItem[];
   approvals: ApprovalRequest[];
   logs: ActionLog[];
+  sessions: AISession[];
 };
 
 const defaultLocalState: AppLocalState = {
@@ -35,7 +47,8 @@ const defaultLocalState: AppLocalState = {
   projects: [],
   memory: [],
   approvals: [],
-  logs: []
+  logs: [],
+  sessions: []
 };
 
 const loadLocalState = (): AppLocalState => {
@@ -49,7 +62,8 @@ const loadLocalState = (): AppLocalState => {
       projects: parsed.projects ?? [],
       memory: parsed.memory ?? [],
       approvals: parsed.approvals ?? [],
-      logs: parsed.logs ?? []
+      logs: parsed.logs ?? [],
+      sessions: parsed.sessions ?? []
     };
   } catch {
     return defaultLocalState;
@@ -67,13 +81,15 @@ export default function App() {
   const [memory, setMemory] = useState<MemoryItem[]>(hydratedState.memory);
   const [approvals, setApprovals] = useState<ApprovalRequest[]>(hydratedState.approvals);
   const [logs, setLogs] = useState<ActionLog[]>(hydratedState.logs);
+  const [sessions, setSessions] = useState<AISession[]>(hydratedState.sessions);
 
   const pendingApprovals = useMemo(() => approvals.filter((a) => a.status === 'Pending').length, [approvals]);
+  const openTasks = useMemo(() => tasks.filter((t) => t.status !== 'Done').length, [tasks]);
 
   useEffect(() => {
-    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
+    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs, sessions };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
-  }, [tasks, projects, memory, approvals, logs]);
+  }, [tasks, projects, memory, approvals, logs, sessions]);
 
   const addLog = (summary: string, status: ActionLog['status']) => {
     setLogs((prev) => [{ id: localId(), summary, status, createdAt: new Date().toISOString() }, ...prev]);
@@ -82,8 +98,23 @@ export default function App() {
   const submitPrompt = (event: FormEvent) => {
     event.preventDefault();
     if (!prompt.trim()) return;
-    const drafted = `Recommendation (${role}): ${prompt.trim()}\n\nPrepared action: I created a draft plan locally. External execution needs approval.`;
+
+    const cleanPrompt = prompt.trim();
+    const drafted = [
+      `Recommendation (${role}): ${cleanPrompt}`,
+      '',
+      'Draft: I outlined your next steps and saved this command as a local session.',
+      'Prepared action: External execution is not performed in local-only mode and needs approval.'
+    ].join('\n');
+
     setResponse(drafted);
+    setSessions((prev) => [{
+      id: localId(),
+      role,
+      title: cleanPrompt.slice(0, 54),
+      summary: `Drafted recommendation in ${role} mode.`,
+      createdAt: new Date().toISOString()
+    }, ...prev].slice(0, 10));
     addLog(`Prompt processed in ${role} mode`, 'Drafted');
     setPrompt('');
   };
@@ -105,7 +136,7 @@ export default function App() {
       id: localId(),
       title: `Memory ${memory.length + 1}`,
       content: 'User prefers concise executive summaries.',
-      category: 'User preference',
+      category: memoryCategories[memory.length % memoryCategories.length],
       isActive: true
     };
     setMemory((prev) => [item, ...prev]);
@@ -128,20 +159,48 @@ export default function App() {
     addLog(`Approval ${status.toLowerCase()} by user`, status === 'Approved' ? 'Done' : 'Blocked');
   };
 
+  const cycleTaskStatus = (id: string) => {
+    const nextStatusByCurrent: Record<Task['status'], Task['status']> = {
+      Open: 'In Progress',
+      'In Progress': 'Done',
+      Done: 'Open'
+    };
+
+    setTasks((prev) => prev.map((task) => (task.id === id ? { ...task, status: nextStatusByCurrent[task.status] } : task)));
+    addLog('Task status updated', 'In Progress');
+  };
+
+  const toggleMemoryActive = (id: string) => {
+    setMemory((prev) => prev.map((m) => (m.id === id ? { ...m, isActive: !m.isActive } : m)));
+    addLog('Memory status toggled', 'Saved');
+  };
+
+  const clearLocalState = () => {
+    setTasks([]);
+    setProjects([]);
+    setMemory([]);
+    setApprovals([]);
+    setLogs([]);
+    setSessions([]);
+    setResponse('');
+    window.localStorage.removeItem(STORAGE_KEY);
+  };
+
   return (
     <div className="app">
       <header className="topbar">
         <div className="brand">EvaOneAI</div>
-        <button className="ghost">Launch App</button>
+        <button className="ghost" onClick={() => setActiveView('Command')}>Open Command Center</button>
       </header>
 
       <section className="hero">
         <div>
-          <p className="eyebrow">The next-generation AI executive orchestration system</p>
-          <h1>EVA ONE</h1>
-          <h2>ORGANIZE • PLAN • EXECUTE</h2>
+          <p className="eyebrow">Private, permission-based executive orchestration</p>
+          <h1>EvaOneAI</h1>
+          <h2>ORGANIZE • PLAN • COORDINATE</h2>
           <p>
-            Private, local-first, permission-based AI Chief of Staff for creators, founders, freelancers, and small teams.
+            A local-first executive operating layer for founders, creators, and teams. Advice is drafted locally,
+            and external actions are prepared for approval before execution.
           </p>
           <div className="actions">
             <button onClick={() => setActiveView('Command')}>Start Command</button>
@@ -150,9 +209,9 @@ export default function App() {
         </div>
         <div className="heroCard">
           <p><strong>Mode:</strong> {role}</p>
+          <p><strong>Open tasks:</strong> {openTasks}</p>
           <p><strong>Pending approvals:</strong> {pendingApprovals}</p>
           <p><strong>System status:</strong> Local-only development mode</p>
-          <p><strong>Integrations:</strong> Not connected</p>
         </div>
       </section>
 
@@ -176,16 +235,17 @@ export default function App() {
               <ul>
                 <li>Review pending approvals ({pendingApprovals})</li>
                 <li>Advance active projects ({projects.length})</li>
-                <li>Close open tasks ({tasks.filter((t) => t.status !== 'Done').length})</li>
+                <li>Close open tasks ({openTasks})</li>
               </ul>
             </article>
             <article>
-              <h3>Quick Actions</h3>
-              <div className="stack">
-                <button onClick={createTask}>Create task</button>
-                <button onClick={createProject}>Create project</button>
-                <button onClick={createMemory}>Save to memory</button>
-              </div>
+              <h3>Recent AI Sessions</h3>
+              <ul>
+                {sessions.slice(0, 3).map((session) => (
+                  <li key={session.id}>{session.title} · {session.role}</li>
+                ))}
+                {sessions.length === 0 && <li>No sessions yet.</li>}
+              </ul>
             </article>
           </div>
         )}
@@ -218,7 +278,15 @@ export default function App() {
           <section>
             <h3>Tasks</h3>
             <button onClick={createTask}>Add task</button>
-            <ul>{tasks.map((t) => <li key={t.id}>{t.title} · {t.priority} · {t.status}</li>)}</ul>
+            <ul>
+              {tasks.map((t) => (
+                <li key={t.id}>
+                  {t.title} · {t.priority} · {t.status}{' '}
+                  <button className="ghost" onClick={() => cycleTaskStatus(t.id)}>Next status</button>
+                </li>
+              ))}
+              {tasks.length === 0 && <li>No tasks yet.</li>}
+            </ul>
           </section>
         )}
 
@@ -226,7 +294,10 @@ export default function App() {
           <section>
             <h3>Projects</h3>
             <button onClick={createProject}>Add project</button>
-            <ul>{projects.map((p) => <li key={p.id}>{p.name} · {p.status}</li>)}</ul>
+            <ul>
+              {projects.map((p) => <li key={p.id}>{p.name} · {p.status}</li>)}
+              {projects.length === 0 && <li>No projects yet.</li>}
+            </ul>
           </section>
         )}
 
@@ -234,7 +305,15 @@ export default function App() {
           <section>
             <h3>Memory</h3>
             <button onClick={createMemory}>Add memory item</button>
-            <ul>{memory.map((m) => <li key={m.id}>{m.title} · {m.category} · {m.isActive ? 'active' : 'inactive'}</li>)}</ul>
+            <ul>
+              {memory.map((m) => (
+                <li key={m.id}>
+                  {m.title} · {m.category} · {m.isActive ? 'active' : 'inactive'}{' '}
+                  <button className="ghost" onClick={() => toggleMemoryActive(m.id)}>Toggle</button>
+                </li>
+              ))}
+              {memory.length === 0 && <li>No memory items yet.</li>}
+            </ul>
           </section>
         )}
 
@@ -243,7 +322,8 @@ export default function App() {
             <h3>Settings</h3>
             <p>AI provider status: configured through backend gateway only.</p>
             <p>Connected apps: none connected.</p>
-            <p>Privacy: local-only demo data, no external actions executed.</p>
+            <p>Privacy: local-only data. External actions remain drafted or prepared.</p>
+            <button className="ghost" onClick={clearLocalState}>Clear local data</button>
             <h4>Approvals</h4>
             <ul>
               {approvals.map((a) => (
@@ -257,6 +337,7 @@ export default function App() {
                   )}
                 </li>
               ))}
+              {approvals.length === 0 && <li>No approval requests yet.</li>}
             </ul>
           </section>
         )}
