@@ -114,10 +114,51 @@ struct EvaSession: Codable, Identifiable {
 }
 
 struct EvaLocalState: Codable {
+    var roleMode: EvaRoleMode
     var tasks: [EvaTask]
     var projects: [EvaProject]
     var memoryItems: [EvaMemoryItem]
     var approvals: [EvaApprovalRequest]
     var actionLogs: [EvaActionLog]
     var sessions: [EvaSession]
+
+    init(
+        roleMode: EvaRoleMode = .chiefOfStaff,
+        tasks: [EvaTask],
+        projects: [EvaProject],
+        memoryItems: [EvaMemoryItem],
+        approvals: [EvaApprovalRequest],
+        actionLogs: [EvaActionLog],
+        sessions: [EvaSession]
+    ) {
+        self.roleMode = roleMode
+        self.tasks = tasks
+        self.projects = projects
+        self.memoryItems = memoryItems
+        self.approvals = approvals
+        self.actionLogs = actionLogs
+        self.sessions = sessions
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case roleMode
+        case tasks
+        case projects
+        case memoryItems
+        case approvals
+        case actionLogs
+        case sessions
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        roleMode = try container.decodeIfPresent(EvaRoleMode.self, forKey: .roleMode) ?? .chiefOfStaff
+        tasks = try container.decodeIfPresent([EvaTask].self, forKey: .tasks) ?? []
+        projects = try container.decodeIfPresent([EvaProject].self, forKey: .projects) ?? []
+        memoryItems = try container.decodeIfPresent([EvaMemoryItem].self, forKey: .memoryItems) ?? []
+        approvals = try container.decodeIfPresent([EvaApprovalRequest].self, forKey: .approvals) ?? []
+        actionLogs = try container.decodeIfPresent([EvaActionLog].self, forKey: .actionLogs) ?? []
+        sessions = try container.decodeIfPresent([EvaSession].self, forKey: .sessions) ?? []
+    }
 }
