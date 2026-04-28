@@ -31,15 +31,18 @@ const memoryCategories: MemoryItem['category'][] = [
   'System instruction'
 ];
 
+const views = ['Home', 'Command', 'Tasks', 'Projects', 'Memory', 'Settings'] as const;
+type ActiveView = (typeof views)[number];
+
 const localId = () => Math.random().toString(36).slice(2, 10);
-const STORAGE_KEY = 'evaoneai-web-v2-state';
+const STORAGE_KEY = 'evaoneai-web-v3-state';
 
 const defaultIntegrations: Integration[] = [
   {
     id: 'gestalt-visions',
     provider: 'Gestalt Visions',
     status: 'Disconnected',
-    scopes: ['Read project plan handoff', 'Write approved campaign brief', 'Read approved asset checklist']
+    scopes: ['Read approved project brief', 'Prepare campaign handoff', 'Log approved sync request']
   }
 ];
 
@@ -85,10 +88,15 @@ const loadLocalState = (): AppLocalState => {
 
 export default function App() {
   const hydratedState = useMemo(loadLocalState, []);
-  const [activeView, setActiveView] = useState<'Home' | 'Command' | 'Tasks' | 'Projects' | 'Memory' | 'Settings'>('Home');
+  const [activeView, setActiveView] = useState<ActiveView>('Home');
   const [role, setRole] = useState<RoleMode>('Chief of Staff');
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
+  const [taskTitle, setTaskTitle] = useState('');
+  const [projectName, setProjectName] = useState('');
+  const [memoryTitle, setMemoryTitle] = useState('');
+  const [memoryContent, setMemoryContent] = useState('');
+  const [actionTitle, setActionTitle] = useState('');
   const [tasks, setTasks] = useState<Task[]>(hydratedState.tasks);
   const [projects, setProjects] = useState<Project[]>(hydratedState.projects);
   const [memory, setMemory] = useState<MemoryItem[]>(hydratedState.memory);
@@ -117,17 +125,26 @@ export default function App() {
 
   const submitPrompt = (event: FormEvent) => {
     event.preventDefault();
-    if (!prompt.trim()) return;
+    if (!prompt.trim()) {
+      addLog('Command ignored because the prompt was empty', 'Needs Human Step');
+      return;
+    }
 
     const cleanPrompt = prompt.trim();
     const drafted = [
-      `Recommendation (${role}): ${cleanPrompt}`,
+      `Eva response mode: ${role}`,
       '',
-      'Draft: I outlined your next steps and saved this command as a local session.',
-      'Prepared action: External execution is not performed in local-only mode and needs approval.',
+      `Request: ${cleanPrompt}`,
+      '',
+      'Drafted output:',
+      '- Clarify the immediate outcome needed.',
+      '- Break the request into execution steps.',
+      '- Queue any external send, publish, sync, billing, or account-changing action for approval first.',
+      '- Keep local memory private unless the user exports or connects a backend.',
+      '',
       gestaltConnection?.status === 'Connected'
-        ? 'Integration note: Gestalt Visions is connected for approved handoffs.'
-        : 'Integration note: Gestalt Visions is not connected yet. I can prepare the connection request.'
+        ? 'Gestalt Visions is locally approved for staged handoffs. No external sync is performed from this prototype.'
+        : 'Gestalt Visions is not connected. Use the approval queue before marking it connected.'
     ].join('\n');
 
     setResponse(drafted);
@@ -135,50 +152,80 @@ export default function App() {
       id: localId(),
       role,
       title: cleanPrompt.slice(0, 54),
-      summary: `Drafted recommendation in ${role} mode.`,
+      summary: `Drafted a local recommendation in ${role} mode.`,
       createdAt: new Date().toISOString()
     }, ...prev].slice(0, 10));
-    addLog(`Prompt processed in ${role} mode`, 'Drafted');
+    addLog(`Local command drafted in ${role} mode`, 'Drafted');
     setPrompt('');
   };
 
   const createTask = () => {
-    const task: Task = { id: localId(), title: `New task ${tasks.length + 1}`, priority: 'Medium', status: 'Open' };
+    const title = taskTitle.trim();
+    if (!title) {
+      addLog('Task was not created because it needs a real title', 'Needs Human Step');
+      return;
+    }
+
+    const task: Task = { id: localId(), title, priority: 'Medium', status: 'Open' };
     setTasks((prev) => [task, ...prev]);
+    setTaskTitle('');
     addLog(`Task created: ${task.title}`, 'Saved');
   };
 
   const createProject = () => {
-    const project: Project = { id: localId(), name: `Project ${projects.length + 1}`, status: 'Planning' };
+    const name = projectName.trim();
+    if (!name) {
+      addLog('Project was not created because it needs a real name', 'Needs Human Step');
+      return;
+    }
+
+    const project: Project = { id: localId(), name, status: 'Planning' };
     setProjects((prev) => [project, ...prev]);
+    setProjectName('');
     addLog(`Project created: ${project.name}`, 'Saved');
   };
 
   const createMemory = () => {
+    const title = memoryTitle.trim();
+    const content = memoryContent.trim();
+    if (!title || !content) {
+      addLog('Memory was not saved because title and content are required', 'Needs Human Step');
+      return;
+    }
+
     const item: MemoryItem = {
       id: localId(),
-      title: `Memory ${memory.length + 1}`,
-      content: 'User prefers concise executive summaries.',
+      title,
+      content,
       category: memoryCategories[memory.length % memoryCategories.length],
       isActive: true
     };
     setMemory((prev) => [item, ...prev]);
+    setMemoryTitle('');
+    setMemoryContent('');
     addLog(`Memory saved: ${item.title}`, 'Saved');
   };
 
   const createApproval = () => {
+    const title = actionTitle.trim() || 'Prepared external action';
     const approval: ApprovalRequest = {
       id: localId(),
-      title: 'Draft CEO outreach email',
-      description: 'Prepared only. Gmail integration is not connected, so this has not been sent.',
+      title,
+      description: 'Prepared only. This prototype does not send, publish, bill, sync, or modify external accounts.',
       status: 'Pending',
       actionType: 'External Send'
     };
     setApprovals((prev) => [approval, ...prev]);
-    addLog('Approval request created for external action', 'Needs Approval');
+    setActionTitle('');
+    addLog(`Approval queued: ${approval.title}`, 'Needs Approval');
   };
 
   const requestGestaltConnection = () => {
+    if (gestaltConnection?.status === 'Connected') {
+      addLog('Gestalt Visions is already locally approved', 'Done');
+      return;
+    }
+
     const existingPending = approvals.some(
       (approval) => approval.actionType === 'Integration Connect' && approval.status === 'Pending'
     );
@@ -196,66 +243,59 @@ export default function App() {
 
     const approval: ApprovalRequest = {
       id: localId(),
-      title: 'Connect Gestalt Visions app',
+      title: 'Approve Gestalt Visions local connection',
       description:
-        'Prepared connection request only. Approval is required before EvaOneAI marks Gestalt Visions as connected.',
+        'This only marks Gestalt Visions as locally approved inside Eva One. It does not connect to an external API.',
       status: 'Pending',
       actionType: 'Integration Connect',
       integrationId: 'gestalt-visions',
       payload: JSON.stringify({ provider: 'Gestalt Visions', requestedScopes: gestaltConnection?.scopes ?? [] })
     };
     setApprovals((prev) => [approval, ...prev]);
-    addLog('Prepared Gestalt Visions integration approval request', 'Needs Approval');
+    addLog('Gestalt Visions connection approval queued', 'Needs Approval');
   };
 
   const prepareGestaltHandoff = () => {
     if (gestaltConnection?.status !== 'Connected') {
-      addLog('Gestalt Visions handoff blocked because app is not connected', 'Blocked');
+      addLog('Gestalt handoff blocked until the local connection is approved', 'Blocked');
       return;
     }
 
     const approval: ApprovalRequest = {
       id: localId(),
-      title: 'Send project brief to Gestalt Visions',
+      title: 'Approve Gestalt Visions handoff package',
       description:
-        'Prepared handoff package from active projects. This request is staged and requires approval before sync.',
+        'Prepared a local handoff request from active projects. External syncing is not executed by this prototype.',
       status: 'Pending',
       actionType: 'Integration Handoff',
       integrationId: 'gestalt-visions',
-      payload: JSON.stringify({ projectCount: projects.length, exportedAt: new Date().toISOString() })
+      payload: JSON.stringify({ projectCount: projects.length, preparedAt: new Date().toISOString() })
     };
 
     setApprovals((prev) => [approval, ...prev]);
-    addLog('Prepared Gestalt Visions project handoff request', 'Needs Approval');
+    addLog('Gestalt handoff approval queued', 'Needs Approval');
   };
 
   const setApprovalStatus = (id: string, status: 'Approved' | 'Rejected') => {
     const approval = approvals.find((item) => item.id === id);
-
     setApprovals((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
 
     if (approval?.actionType === 'Integration Connect' && approval.integrationId) {
       setIntegrations((prev) =>
         prev.map((integration) => {
           if (integration.id !== approval.integrationId) return integration;
-          if (status === 'Approved') {
-            return { ...integration, status: 'Connected', lastSyncAt: new Date().toISOString() };
-          }
+          if (status === 'Approved') return { ...integration, status: 'Connected', lastSyncAt: new Date().toISOString() };
           return { ...integration, status: 'Disconnected' };
         })
       );
     }
 
-    if (approval?.actionType === 'Integration Handoff' && approval.integrationId && status === 'Approved') {
-      setIntegrations((prev) =>
-        prev.map((integration) =>
-          integration.id === approval.integrationId ? { ...integration, lastSyncAt: new Date().toISOString() } : integration
-        )
-      );
-      addLog('Gestalt Visions handoff approved and synced', 'Synced');
-    } else {
-      addLog(`Approval ${status.toLowerCase()} by user`, status === 'Approved' ? 'Done' : 'Blocked');
+    if (approval?.actionType === 'Integration Handoff' && status === 'Approved') {
+      addLog('Handoff approved locally. No external sync was executed.', 'Prepared');
+      return;
     }
+
+    addLog(`Approval ${status.toLowerCase()} by user`, status === 'Approved' ? 'Done' : 'Blocked');
   };
 
   const cycleTaskStatus = (id: string) => {
@@ -286,73 +326,127 @@ export default function App() {
     window.localStorage.removeItem(STORAGE_KEY);
   };
 
+  const pendingItems = approvals.filter((item) => item.status === 'Pending');
+
   return (
-    <div className="app">
-      <header className="topbar">
-        <div className="brand">EvaOneAI</div>
-        <button className="ghost" onClick={() => setActiveView('Command')}>Open Command Center</button>
+    <div className="appShell">
+      <header className="siteNav">
+        <button className="brandLockup" onClick={() => setActiveView('Home')} type="button">
+          <span className="brandOrb" />
+          <span>EVA ONE</span>
+        </button>
+        <nav className="desktopLinks" aria-label="Primary navigation">
+          {views.map((view) => (
+            <button key={view} onClick={() => setActiveView(view)} type="button">
+              {view}
+            </button>
+          ))}
+        </nav>
+        <button className="launchButton" onClick={() => setActiveView('Command')} type="button">Launch App</button>
       </header>
 
-      <section className="hero">
-        <div>
-          <p className="eyebrow">Private, permission-based executive orchestration</p>
-          <h1>EvaOneAI</h1>
-          <h2>ORGANIZE • PLAN • COORDINATE</h2>
-          <p>
-            A local-first executive operating layer for founders, creators, and teams. Advice is drafted locally,
-            and external actions are prepared for approval before execution.
+      <section className="cinemaHero">
+        <div className="heroCopy">
+          <p className="eyebrow">Private AI command layer</p>
+          <h1>EVA ONE</h1>
+          <h2>PLAN • ORGANIZE • APPROVE</h2>
+          <p className="heroText">
+            A local-first executive operating system for creators, founders, freelancers, and small teams.
+            Eva drafts decisions, structures work, stores local memory, and queues risky actions for approval.
           </p>
-          <div className="actions">
-            <button onClick={() => setActiveView('Command')}>Start Command</button>
-            <button className="ghost" onClick={createApproval}>Prepare External Action</button>
-            <button className="ghost" onClick={requestGestaltConnection}>Connect Gestalt Visions</button>
+          <div className="heroActions">
+            <button className="primaryGlow" onClick={() => setActiveView('Command')} type="button">Start Command</button>
+            <button className="ghostGlow" onClick={createApproval} type="button">Queue Approval</button>
+            <button className="ghostGlow" onClick={requestGestaltConnection} type="button">Request Gestalt Link</button>
+          </div>
+          <div className="metricRow" aria-label="Live local app state">
+            <div><strong>{openTasks}</strong><span>Open Tasks</span></div>
+            <div><strong>{activeProjects}</strong><span>Projects</span></div>
+            <div><strong>{pendingApprovals}</strong><span>Approvals</span></div>
+            <div><strong>{sessions.length}</strong><span>Sessions</span></div>
           </div>
         </div>
-        <div className="heroCard">
-          <p><strong>Mode:</strong> {role}</p>
-          <p><strong>Open tasks:</strong> {openTasks}</p>
-          <p><strong>Active projects:</strong> {activeProjects}</p>
-          <p><strong>Pending approvals:</strong> {pendingApprovals}</p>
-          <p><strong>Gestalt Visions:</strong> {gestaltConnection?.status ?? 'Unavailable'}</p>
-          <p><strong>System status:</strong> Local-only development mode</p>
+
+        <div className="holoStage" aria-label="Eva One visual identity preview">
+          <div className="evaHead" />
+          <div className="evaCore" />
+          <div className="scanCard topScan">
+            <strong>LOCAL MODE</strong>
+            <span>No external execution</span>
+            <span>Approval gates active</span>
+          </div>
+          <div className="scanCard bottomScan">
+            <strong>{gestaltConnection?.status ?? 'Unavailable'}</strong>
+            <span>Gestalt Visions</span>
+          </div>
         </div>
       </section>
 
-      <nav className="bottomNav">
-        {['Home', 'Command', 'Tasks', 'Projects', 'Memory', 'Settings'].map((item) => (
+      <section className="truthStrip" aria-label="System rules">
+        <span>Local memory</span>
+        <span>Approval-first actions</span>
+        <span>No fake sends</span>
+        <span>No fake revenue</span>
+        <span>No hidden sync</span>
+      </section>
+
+      <nav className="appTabs" aria-label="App sections">
+        {views.map((item) => (
           <button
             key={item}
-            onClick={() => setActiveView(item as typeof activeView)}
+            onClick={() => setActiveView(item)}
             className={activeView === item ? 'active' : ''}
+            type="button"
           >
             {item}
           </button>
         ))}
       </nav>
 
-      <main className="panel">
+      <main className="controlPanel">
         {activeView === 'Home' && (
           <div className="grid2">
             <article>
-              <h3>Today’s Priorities</h3>
+              <h3>Priority Queue</h3>
               <ul>
                 <li>Review pending approvals ({pendingApprovals})</li>
                 <li>Advance active projects ({activeProjects})</li>
                 <li>Close open tasks ({openTasks})</li>
-                <li>
-                  {gestaltConnection?.status === 'Connected'
-                    ? 'Prepare approved project handoff to Gestalt Visions'
-                    : 'Approve Gestalt Visions connection request'}
-                </li>
+                <li>{gestaltConnection?.status === 'Connected' ? 'Prepare approved Gestalt handoff' : 'Approve or reject Gestalt connection'}</li>
               </ul>
+            </article>
+            <article>
+              <h3>Pending Approvals</h3>
+              {pendingItems.length === 0 && <p className="muted">No pending approvals.</p>}
+              <div className="approvalList">
+                {pendingItems.slice(0, 4).map((approval) => (
+                  <div className="approvalCard" key={approval.id}>
+                    <strong>{approval.title}</strong>
+                    <span>{approval.description}</span>
+                    <div className="cardActions">
+                      <button onClick={() => setApprovalStatus(approval.id, 'Approved')} type="button">Approve</button>
+                      <button onClick={() => setApprovalStatus(approval.id, 'Rejected')} type="button">Reject</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </article>
             <article>
               <h3>Recent AI Sessions</h3>
               <ul>
                 {sessions.slice(0, 3).map((session) => (
-                  <li key={session.id}>{session.title} · {session.role}</li>
+                  <li key={session.id}>{session.title} - {session.role}</li>
                 ))}
                 {sessions.length === 0 && <li>No sessions yet.</li>}
+              </ul>
+            </article>
+            <article>
+              <h3>Action Log</h3>
+              <ul>
+                {logs.slice(0, 5).map((log) => (
+                  <li key={log.id}>{log.status} - {log.summary}</li>
+                ))}
+                {logs.length === 0 && <li>No actions yet.</li>}
               </ul>
             </article>
           </div>
@@ -369,118 +463,133 @@ export default function App() {
                 </select>
               </label>
               <label>
-                Prompt
+                Command
                 <textarea
-                  placeholder="Describe what you need..."
+                  placeholder="Ask Eva to plan, draft, organize, research, or prepare an approval."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                 />
               </label>
-              <div className="actions">
-                <button type="submit">Run Command</button>
-                <button type="button" className="ghost" onClick={prepareGestaltHandoff}>
-                  Prepare Gestalt Handoff
-                </button>
+              <div className="heroActions compact">
+                <button type="submit" className="primaryGlow">Run Local Command</button>
+                <button type="button" className="ghostGlow" onClick={prepareGestaltHandoff}>Prepare Gestalt Handoff</button>
               </div>
             </form>
             {response && <pre>{response}</pre>}
+            <div className="inlineTool">
+              <label>
+                Approval title
+                <input value={actionTitle} onChange={(e) => setActionTitle(e.target.value)} placeholder="Example: Draft client outreach email" />
+              </label>
+              <button className="ghostGlow" onClick={createApproval} type="button">Queue External Action</button>
+            </div>
           </section>
         )}
 
         {activeView === 'Tasks' && (
           <section>
             <h3>Tasks</h3>
-            <button onClick={createTask}>Add task</button>
-            <ul>
-              {tasks.map((t) => (
-                <li key={t.id}>
-                  {t.title} · {t.priority} · {t.status}{' '}
-                  <button className="ghost" onClick={() => cycleTaskStatus(t.id)}>Next status</button>
-                </li>
+            <div className="inlineTool">
+              <input value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} placeholder="Task title" />
+              <button className="primaryGlow" onClick={createTask} type="button">Add Task</button>
+            </div>
+            <div className="itemList">
+              {tasks.map((task) => (
+                <div className="listItem" key={task.id}>
+                  <strong>{task.title}</strong>
+                  <span>{task.priority} - {task.status}</span>
+                  <button className="miniButton" onClick={() => cycleTaskStatus(task.id)} type="button">Next status</button>
+                </div>
               ))}
-              {tasks.length === 0 && <li>No tasks yet.</li>}
-            </ul>
+              {tasks.length === 0 && <p className="muted">No tasks yet.</p>}
+            </div>
           </section>
         )}
 
         {activeView === 'Projects' && (
           <section>
             <h3>Projects</h3>
-            <div className="actions">
-              <button onClick={createProject}>Add project</button>
-              <button className="ghost" onClick={prepareGestaltHandoff}>Prepare handoff to Gestalt Visions</button>
+            <div className="inlineTool">
+              <input value={projectName} onChange={(e) => setProjectName(e.target.value)} placeholder="Project name" />
+              <button className="primaryGlow" onClick={createProject} type="button">Add Project</button>
+              <button className="ghostGlow" onClick={prepareGestaltHandoff} type="button">Prepare Handoff</button>
             </div>
-            <ul>
-              {projects.map((p) => <li key={p.id}>{p.name} · {p.status}</li>)}
-              {projects.length === 0 && <li>No projects yet.</li>}
-            </ul>
+            <div className="itemList">
+              {projects.map((project) => (
+                <div className="listItem" key={project.id}>
+                  <strong>{project.name}</strong>
+                  <span>{project.status}</span>
+                </div>
+              ))}
+              {projects.length === 0 && <p className="muted">No projects yet.</p>}
+            </div>
           </section>
         )}
 
         {activeView === 'Memory' && (
           <section>
-            <h3>Memory</h3>
-            <button onClick={createMemory}>Add memory item</button>
-            <ul>
-              {memory.map((m) => (
-                <li key={m.id}>
-                  {m.title} · {m.category} · {m.isActive ? 'active' : 'inactive'}{' '}
-                  <button className="ghost" onClick={() => toggleMemoryActive(m.id)}>Toggle</button>
-                </li>
+            <h3>Memory Vault</h3>
+            <div className="stack">
+              <input value={memoryTitle} onChange={(e) => setMemoryTitle(e.target.value)} placeholder="Memory title" />
+              <textarea value={memoryContent} onChange={(e) => setMemoryContent(e.target.value)} placeholder="Memory content" />
+              <button className="primaryGlow" onClick={createMemory} type="button">Save Memory</button>
+            </div>
+            <div className="itemList">
+              {memory.map((item) => (
+                <div className="listItem" key={item.id}>
+                  <strong>{item.title}</strong>
+                  <span>{item.category} - {item.isActive ? 'active' : 'inactive'}</span>
+                  <p>{item.content}</p>
+                  <button className="miniButton" onClick={() => toggleMemoryActive(item.id)} type="button">Toggle</button>
+                </div>
               ))}
-              {memory.length === 0 && <li>No memory items yet.</li>}
-            </ul>
+              {memory.length === 0 && <p className="muted">No memory items yet.</p>}
+            </div>
           </section>
         )}
 
         {activeView === 'Settings' && (
           <section>
-            <h3>Settings</h3>
-            <p>AI provider status: configured through backend gateway only.</p>
-            <p>Privacy: local-only data. External actions remain drafted or prepared.</p>
-            <h4>Connected apps</h4>
-            <ul>
-              {integrations.map((integration) => (
-                <li key={integration.id}>
-                  <strong>{integration.provider}</strong> — {integration.status}
-                  {integration.lastSyncAt && <> · Last sync: {new Date(integration.lastSyncAt).toLocaleString()}</>}
-                  <br />
-                  Scopes: {integration.scopes.join(', ')}
-                </li>
-              ))}
-            </ul>
-            <div className="actions">
-              <button onClick={requestGestaltConnection}>Request Gestalt Visions Connection</button>
-              <button className="ghost" onClick={clearLocalState}>Clear local data</button>
+            <h3>Settings & Approvals</h3>
+            <div className="grid2">
+              <article>
+                <h4>Connected Apps</h4>
+                {integrations.map((integration) => (
+                  <div className="listItem" key={integration.id}>
+                    <strong>{integration.provider}</strong>
+                    <span>{integration.status}</span>
+                    <p>Scopes: {integration.scopes.join(', ')}</p>
+                    {integration.lastSyncAt && <p>Last local approval: {new Date(integration.lastSyncAt).toLocaleString()}</p>}
+                  </div>
+                ))}
+                <div className="heroActions compact">
+                  <button className="primaryGlow" onClick={requestGestaltConnection} type="button">Request Gestalt Approval</button>
+                  <button className="ghostGlow" onClick={clearLocalState} type="button">Clear Local Data</button>
+                </div>
+              </article>
+              <article>
+                <h4>All Approvals</h4>
+                <div className="approvalList">
+                  {approvals.map((approval) => (
+                    <div className="approvalCard" key={approval.id}>
+                      <strong>{approval.title}</strong>
+                      <span>{approval.description}</span>
+                      <em>{approval.status}</em>
+                      {approval.status === 'Pending' && (
+                        <div className="cardActions">
+                          <button onClick={() => setApprovalStatus(approval.id, 'Approved')} type="button">Approve</button>
+                          <button onClick={() => setApprovalStatus(approval.id, 'Rejected')} type="button">Reject</button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {approvals.length === 0 && <p className="muted">No approval requests yet.</p>}
+                </div>
+              </article>
             </div>
-            <h4>Approvals</h4>
-            <ul>
-              {approvals.map((a) => (
-                <li key={a.id}>
-                  <strong>{a.title}</strong> — {a.description} [{a.status}] {' '}
-                  {a.status === 'Pending' && (
-                    <>
-                      <button onClick={() => setApprovalStatus(a.id, 'Approved')}>Approve</button>
-                      <button onClick={() => setApprovalStatus(a.id, 'Rejected')}>Reject</button>
-                    </>
-                  )}
-                </li>
-              ))}
-              {approvals.length === 0 && <li>No approval requests yet.</li>}
-            </ul>
           </section>
         )}
       </main>
-
-      <section className="panel">
-        <h3>Action Log</h3>
-        <ul>
-          {logs.map((log) => (
-            <li key={log.id}>{new Date(log.createdAt).toLocaleString()} · {log.status} · {log.summary}</li>
-          ))}
-          {logs.length === 0 && <li>No actions yet.</li>}
-        </ul>
-      </section>
     </div>
   );
 }
