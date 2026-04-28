@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import {
   ActionLog,
   ApprovalRequest,
@@ -30,6 +30,9 @@ type AppLocalState = {
   logs: ActionLog[];
 };
 
+type AppView = 'Home' | 'Command' | 'Tasks' | 'Projects' | 'Memory' | 'Settings';
+const appViews: AppView[] = ['Home', 'Command', 'Tasks', 'Projects', 'Memory', 'Settings'];
+
 const defaultLocalState: AppLocalState = {
   tasks: [],
   projects: [],
@@ -58,7 +61,7 @@ const loadLocalState = (): AppLocalState => {
 
 export default function App() {
   const hydratedState = useMemo(loadLocalState, []);
-  const [activeView, setActiveView] = useState<'Home' | 'Command' | 'Tasks' | 'Projects' | 'Memory' | 'Settings'>('Home');
+  const [activeView, setActiveView] = useState<AppView>('Home');
   const [role, setRole] = useState<RoleMode>('Chief of Staff');
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
@@ -131,7 +134,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand">EvaOneAI</div>
+        <div className="brand">Eva.One</div>
         <button className="ghost">Launch App</button>
       </header>
 
@@ -157,7 +160,7 @@ export default function App() {
       </section>
 
       <nav className="bottomNav">
-        {['Home', 'Command', 'Tasks', 'Projects', 'Memory', 'Settings'].map((item) => (
+        {appViews.map((item) => (
           <button
             key={item}
             onClick={() => setActiveView(item as typeof activeView)}
@@ -196,7 +199,7 @@ export default function App() {
             <form onSubmit={submitPrompt} className="stack">
               <label>
                 Role Mode
-                <select value={role} onChange={(e) => setRole(e.target.value as RoleMode)}>
+                <select value={role} onChange={(e: ChangeEvent<HTMLSelectElement>) => setRole(e.target.value as RoleMode)}>
                   {roles.map((item) => <option key={item}>{item}</option>)}
                 </select>
               </label>
@@ -205,7 +208,7 @@ export default function App() {
                 <textarea
                   placeholder="Describe what you need..."
                   value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setPrompt(e.target.value)}
                 />
               </label>
               <button type="submit">Run Command</button>
