@@ -66,20 +66,37 @@ const defaultLocalState: AppLocalState = {
   integrations: defaultIntegrations
 };
 
-const loadLocalState = (): AppLocalState => {
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  if (!raw) return defaultLocalState;
+const getLocalStorage = (): Storage | null => {
+  if (typeof window === 'undefined') return null;
 
   try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+};
+
+const toArray = <T,>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : []);
+
+const loadLocalState = (): AppLocalState => {
+  const storage = getLocalStorage();
+  if (!storage) return defaultLocalState;
+
+  try {
+    const raw = storage.getItem(STORAGE_KEY);
+    if (!raw) return defaultLocalState;
+
     const parsed = JSON.parse(raw) as Partial<AppLocalState>;
+    const integrations = toArray<Integration>(parsed.integrations);
+
     return {
-      tasks: parsed.tasks ?? [],
-      projects: parsed.projects ?? [],
-      memory: parsed.memory ?? [],
-      approvals: parsed.approvals ?? [],
-      logs: parsed.logs ?? [],
-      sessions: parsed.sessions ?? [],
-      integrations: parsed.integrations?.length ? parsed.integrations : defaultIntegrations
+      tasks: toArray<Task>(parsed.tasks),
+      projects: toArray<Project>(parsed.projects),
+      memory: toArray<MemoryItem>(parsed.memory),
+      approvals: toArray<ApprovalRequest>(parsed.approvals),
+      logs: toArray<ActionLog>(parsed.logs),
+      sessions: toArray<AISession>(parsed.sessions),
+      integrations: integrations.length ? integrations : defaultIntegrations
     };
   } catch {
     return defaultLocalState;
@@ -87,7 +104,7 @@ const loadLocalState = (): AppLocalState => {
 };
 
 export default function App() {
-  const hydratedState = useMemo(loadLocalState, []);
+  const [initialLocalState] = useState<AppLocalState>(loadLocalState);
   const [activeView, setActiveView] = useState<ActiveView>('Home');
   const [role, setRole] = useState<RoleMode>('Chief of Staff');
   const [prompt, setPrompt] = useState('');
@@ -97,13 +114,13 @@ export default function App() {
   const [memoryTitle, setMemoryTitle] = useState('');
   const [memoryContent, setMemoryContent] = useState('');
   const [actionTitle, setActionTitle] = useState('');
-  const [tasks, setTasks] = useState<Task[]>(hydratedState.tasks);
-  const [projects, setProjects] = useState<Project[]>(hydratedState.projects);
-  const [memory, setMemory] = useState<MemoryItem[]>(hydratedState.memory);
-  const [approvals, setApprovals] = useState<ApprovalRequest[]>(hydratedState.approvals);
-  const [logs, setLogs] = useState<ActionLog[]>(hydratedState.logs);
-  const [sessions, setSessions] = useState<AISession[]>(hydratedState.sessions);
-  const [integrations, setIntegrations] = useState<Integration[]>(hydratedState.integrations);
+  const [tasks, setTasks] = useState<Task[]>(initialLocalState.tasks);
+  const [projects, setProjects] = useState<Project[]>(initialLocalState.projects);
+  const [memory, setMemory] = useState<MemoryItem[]>(initialLocalState.memory);
+  const [approvals, setApprovals] = useState<ApprovalRequest[]>(initialLocalState.approvals);
+  const [logs, setLogs] = useState<ActionLog[]>(initialLocalState.logs);
+  const [sessions, setSessions] = useState<AISession[]>(initialLocalState.sessions);
+  const [integrations, setIntegrations] = useState<Integration[]>(initialLocalState.integrations);
 
   const pendingApprovals = useMemo(() => approvals.filter((a) => a.status === 'Pending').length, [approvals]);
   const openTasks = useMemo(() => tasks.filter((t) => t.status !== 'Done').length, [tasks]);
@@ -115,8 +132,15 @@ export default function App() {
   );
 
   useEffect(() => {
-    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs, sessions, integrations };
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+    const storage = getLocalStorage();
+    if (!storage) return;
+
+    try {
+      const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs, sessions, integrations };
+      storage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+    } catch {
+      // Graceful fallback when storage is unavailable, blocked, or full.
+    }
   }, [tasks, projects, memory, approvals, logs, sessions, integrations]);
 
   const addLog = (summary: string, status: ActionLog['status']) => {
@@ -323,7 +347,15 @@ export default function App() {
     setSessions([]);
     setIntegrations(defaultIntegrations);
     setResponse('');
-    window.localStorage.removeItem(STORAGE_KEY);
+
+    const storage = getLocalStorage();
+    if (!storage) return;
+
+    try {
+      storage.removeItem(STORAGE_KEY);
+    } catch {
+      // Graceful fallback when storage is unavailable or blocked.
+    }
   };
 
   const pendingItems = approvals.filter((item) => item.status === 'Pending');
