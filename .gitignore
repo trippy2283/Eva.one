@@ -1,0 +1,11 @@
+# Node / web build artifacts
+web/node_modules/
+web/dist/
+
+# Environment files
+.env
+.env.*
+
+# macOS / Xcode artifacts
+.DS_Store
+DerivedData/
