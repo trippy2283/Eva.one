@@ -11,7 +11,6 @@
     EFBAD647C0952381 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3210F6C8E47BA59; };
     01C5BA896F27D3E4 /* EVADataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308912D67EA54CBF; };
     E02835BA71D649FC /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB01CD5492837FA6; };
-    74D689B5AC2E10F3 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 86AE239DCF107B45; };
     28396FAC5D107EB4 /* GoodThenImTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2CE83967154BDA; };
     06512DF7C83BA9E4 /* GoodThenImUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB608AFD351249; };
     620BCE795A1843DF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABE39C71F58046D; };
@@ -209,8 +208,7 @@
         326DA5B17F8904CE,
         EFBAD647C0952381,
         01C5BA896F27D3E4,
-        E02835BA71D649FC,
-        74D689B5AC2E10F3
+        E02835BA71D649FC
       );
       runOnlyForDeploymentPostprocessing = 0;
     };
