@@ -52,17 +52,19 @@ const loadLocalState = (): AppLocalState => {
   const storage = getLocalStorage();
   if (!storage) return defaultLocalState;
 
-  const raw = storage.getItem(STORAGE_KEY);
-  if (!raw) return defaultLocalState;
-
   try {
+    const raw = storage.getItem(STORAGE_KEY);
+    if (!raw) return defaultLocalState;
+
     const parsed = JSON.parse(raw) as Partial<AppLocalState>;
+    const toArray = <T,>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : []);
+
     return {
-      tasks: parsed.tasks ?? [],
-      projects: parsed.projects ?? [],
-      memory: parsed.memory ?? [],
-      approvals: parsed.approvals ?? [],
-      logs: parsed.logs ?? []
+      tasks: toArray<Task>(parsed.tasks),
+      projects: toArray<Project>(parsed.projects),
+      memory: toArray<MemoryItem>(parsed.memory),
+      approvals: toArray<ApprovalRequest>(parsed.approvals),
+      logs: toArray<ActionLog>(parsed.logs)
     };
   } catch {
     return defaultLocalState;
@@ -87,8 +89,12 @@ export default function App() {
     const storage = getLocalStorage();
     if (!storage) return;
 
-    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
-    storage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+    try {
+      const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
+      storage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+    } catch {
+      // Graceful fallback when storage is unavailable or full.
+    }
   }, [tasks, projects, memory, approvals, logs]);
 
   const addLog = (summary: string, status: ActionLog['status']) => {
