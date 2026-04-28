@@ -21,8 +21,10 @@ const roles: RoleMode[] = [
 
 const localId = () => Math.random().toString(36).slice(2, 10);
 const STORAGE_KEY = 'evaoneai-web-v1-state';
+const STORAGE_VERSION = 1;
 
 type AppLocalState = {
+  version: number;
   tasks: Task[];
   projects: Project[];
   memory: MemoryItem[];
@@ -33,6 +35,7 @@ type AppLocalState = {
 const toArray = <T,>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : []);
 
 const defaultLocalState: AppLocalState = {
+  version: STORAGE_VERSION,
   tasks: [],
   projects: [],
   memory: [],
@@ -54,12 +57,14 @@ const loadLocalState = (): AppLocalState => {
   const storage = getLocalStorage();
   if (!storage) return defaultLocalState;
 
-  const raw = storage.getItem(STORAGE_KEY);
-  if (!raw) return defaultLocalState;
-
   try {
+    const raw = storage.getItem(STORAGE_KEY);
+    if (!raw) return defaultLocalState;
+
     const parsed = JSON.parse(raw) as Partial<AppLocalState>;
+
     return {
+      version: STORAGE_VERSION,
       tasks: toArray<Task>(parsed.tasks),
       projects: toArray<Project>(parsed.projects),
       memory: toArray<MemoryItem>(parsed.memory),
@@ -68,6 +73,18 @@ const loadLocalState = (): AppLocalState => {
     };
   } catch {
     return defaultLocalState;
+  }
+};
+
+const saveLocalState = (state: AppLocalState): boolean => {
+  const storage = getLocalStorage();
+  if (!storage) return false;
+
+  try {
+    storage.setItem(STORAGE_KEY, JSON.stringify(state));
+    return true;
+  } catch {
+    return false;
   }
 };
 
@@ -98,11 +115,14 @@ export default function App() {
   useEffect(() => {
     if (!isHydrated) return;
 
-    const storage = getLocalStorage();
-    if (!storage) return;
-
-    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
-    storage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+    saveLocalState({
+      version: STORAGE_VERSION,
+      tasks,
+      projects,
+      memory,
+      approvals,
+      logs
+    });
   }, [isHydrated, tasks, projects, memory, approvals, logs]);
 
   const addLog = (summary: string, status: ActionLog['status']) => {
