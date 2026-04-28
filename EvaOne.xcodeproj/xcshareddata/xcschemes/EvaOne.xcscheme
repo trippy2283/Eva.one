@@ -3,7 +3,7 @@
    <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES">
       <BuildActionEntries>
          <BuildActionEntry buildForTesting="YES" buildForRunning="YES" buildForProfiling="YES" buildForArchiving="YES" buildForAnalyzing="YES">
-            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="DE5460B8732A9F1C" BuildableName="GoodThenIm.app" BlueprintName="GoodThenIm" ReferencedContainer="container:GoodThenIm.xcodeproj"/>
+            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="DE5460B8732A9F1C" BuildableName="EvaOne.app" BlueprintName="EvaOne" ReferencedContainer="container:EvaOne.xcodeproj"/>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
@@ -14,9 +14,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F63B0E17D428AC59"
-               BuildableName = "GoodThenImTests.xctest"
-               BlueprintName = "GoodThenImTests"
-               ReferencedContainer = "container:GoodThenIm.xcodeproj">
+               BuildableName = "EvaOneTests.xctest"
+               BlueprintName = "EvaOneTests"
+               ReferencedContainer = "container:EvaOne.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -24,9 +24,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "05718BC42A96FD3E"
-               BuildableName = "GoodThenImUITests.xctest"
-               BlueprintName = "GoodThenImUITests"
-               ReferencedContainer = "container:GoodThenIm.xcodeproj">
+               BuildableName = "EvaOneUITests.xctest"
+               BlueprintName = "EvaOneUITests"
+               ReferencedContainer = "container:EvaOne.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -34,9 +34,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DE5460B8732A9F1C"
-            BuildableName = "GoodThenIm.app"
-            BlueprintName = "GoodThenIm"
-            ReferencedContainer = "container:GoodThenIm.xcodeproj">
+            BuildableName = "EvaOne.app"
+            BlueprintName = "EvaOne"
+            ReferencedContainer = "container:EvaOne.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DE5460B8732A9F1C"
-            BuildableName = "GoodThenIm.app"
-            BlueprintName = "GoodThenIm"
-            ReferencedContainer = "container:GoodThenIm.xcodeproj">
+            BuildableName = "EvaOne.app"
+            BlueprintName = "EvaOne"
+            ReferencedContainer = "container:EvaOne.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DE5460B8732A9F1C"
-            BuildableName = "GoodThenIm.app"
-            BlueprintName = "GoodThenIm"
-            ReferencedContainer = "container:GoodThenIm.xcodeproj">
+            BuildableName = "EvaOne.app"
+            BlueprintName = "EvaOne"
+            ReferencedContainer = "container:EvaOne.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
