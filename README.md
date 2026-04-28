@@ -1,6 +1,6 @@
 # Eva.one
 
-EvaOneAI now includes a runnable web foundation for a local-first executive orchestration interface.
+EvaOneAI includes a runnable web foundation for a local-first executive orchestration interface.
 
 ## Web App (V1 Foundation)
 
@@ -13,6 +13,11 @@ Path: `web/`
 - Local-only task, project, memory, and approval creation
 - Approval queue with Approve/Reject actions
 - Action log showing real local app events and statuses
+- Gestalt Visions integration bridge flow:
+  - Request connection approval
+  - Mark connection state only after user approval
+  - Prepare approved project handoff packages
+  - Log sync timestamps after approved handoff
 - Honest integration status messaging (no fake completion claims)
 
 ### Run locally
