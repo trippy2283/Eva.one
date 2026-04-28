@@ -12,24 +12,25 @@
     01C5BA896F27D3E4 /* EVADataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308912D67EA54CBF; };
     E02835BA71D649FC /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB01CD5492837FA6; };
     A1B2C3D4E5F60789 /* LandingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60788; };
-    74D689B5AC2E10F3 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 86AE239DCF107B45; };
-    28396FAC5D107EB4 /* GoodThenImTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2CE83967154BDA; };
-    06512DF7C83BA9E4 /* GoodThenImUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB608AFD351249; };
+    9F8E7D6C5B4A3928 /* EvaOneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8E7D6C5B4A3927; };
+    28396FAC5D107EB4 /* EvaOneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2CE83967154BDA; };
+    06512DF7C83BA9E4 /* EvaOneUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB608AFD351249; };
     620BCE795A1843DF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABE39C71F58046D; };
     /* End PBXBuildFile section */
 
     /* Begin PBXFileReference section */
-    FE012345D6789ABC /* GoodThenIm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GoodThenIm.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+    FE012345D6789ABC /* EvaOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EvaOne.app"; sourceTree = BUILT_PRODUCTS_DIR; };
     D7B2CF18503A496E /* AppStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStateManager.swift"; sourceTree = "<group>"; };
     D3210F6C8E47BA59 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlView.swift"; sourceTree = "<group>"; };
     308912D67EA54CBF /* EVADataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EVADataModels.swift"; sourceTree = "<group>"; };
     EB01CD5492837FA6 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainTabView.swift"; sourceTree = "<group>"; };
     A1B2C3D4E5F60788 /* LandingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LandingViews.swift"; sourceTree = "<group>"; };
+    9F8E7D6C5B4A3927 /* EvaOneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvaOneApp.swift"; sourceTree = "<group>"; };
     86AE239DCF107B45 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text.markdown; path = "README.md"; sourceTree = "<group>"; };
-    0F2CE83967154BDA /* GoodThenImTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoodThenImTests.swift"; sourceTree = "<group>"; };
-    7CEB608AFD351249 /* GoodThenImUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoodThenImUITests.swift"; sourceTree = "<group>"; };
-    B7E6AF3CD5902841 /* GoodThenImTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GoodThenImTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-    6DB2CE41A70359F8 /* GoodThenImUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GoodThenImUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+    0F2CE83967154BDA /* EvaOneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvaOneTests.swift"; sourceTree = "<group>"; };
+    7CEB608AFD351249 /* EvaOneUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvaOneUITests.swift"; sourceTree = "<group>"; };
+    B7E6AF3CD5902841 /* EvaOneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EvaOneTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+    6DB2CE41A70359F8 /* EvaOneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EvaOneUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
     2ABE39C71F58046D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
     /* End PBXFileReference section */
 
@@ -62,14 +63,14 @@
     6DA7F249B5E83C10 /* Main Group */ = {
       isa = PBXGroup;
       children = (
-        0ED8142BCA3657F9 /* GoodThenIm */,
-        CE13A985F64B7D02 /* GoodThenImTests */,
-        E5D1F6782A0C439B /* GoodThenImUITests */,
+        0ED8142BCA3657F9 /* EvaOne */,
+        CE13A985F64B7D02 /* EvaOneTests */,
+        E5D1F6782A0C439B /* EvaOneUITests */,
         2F3106BC497A58ED /* Products */
       );
       sourceTree = "<group>";
     };
-    0ED8142BCA3657F9 /* GoodThenIm */ = {
+    0ED8142BCA3657F9 /* EvaOne */ = {
       isa = PBXGroup;
       children = (
         D7B2CF18503A496E,
@@ -77,34 +78,35 @@
         308912D67EA54CBF,
         EB01CD5492837FA6,
         A1B2C3D4E5F60788,
+        9F8E7D6C5B4A3927,
         86AE239DCF107B45
       );
       path = "GoodThenIm";
       sourceTree = "<group>";
     };
     
-    CE13A985F64B7D02 /* GoodThenImTests */ = {
+    CE13A985F64B7D02 /* EvaOneTests */ = {
       isa = PBXGroup;
       children = (
-        0F2CE83967154BDA /* GoodThenImTests.swift */
+        0F2CE83967154BDA /* EvaOneTests.swift */
       );
-      path = "GoodThenImTests";
+      path = "EvaOneTests";
       sourceTree = "<group>";
     };
-    E5D1F6782A0C439B /* GoodThenImUITests */ = {
+    E5D1F6782A0C439B /* EvaOneUITests */ = {
       isa = PBXGroup;
       children = (
-        7CEB608AFD351249 /* GoodThenImUITests.swift */
+        7CEB608AFD351249 /* EvaOneUITests.swift */
       );
-      path = "GoodThenImUITests";
+      path = "EvaOneUITests";
       sourceTree = "<group>";
     };
     2F3106BC497A58ED /* Products */ = {
       isa = PBXGroup;
       children = (
-        FE012345D6789ABC /* GoodThenIm.app */,
-        B7E6AF3CD5902841 /* GoodThenImTests.xctest */,
-        6DB2CE41A70359F8 /* GoodThenImUITests.xctest */
+        FE012345D6789ABC /* EvaOne.app */,
+        B7E6AF3CD5902841 /* EvaOneTests.xctest */,
+        6DB2CE41A70359F8 /* EvaOneUITests.xctest */
       );
       name = Products;
       sourceTree = "<group>";
@@ -112,9 +114,9 @@
     /* End PBXGroup section */
 
     /* Begin PBXNativeTarget section */
-    DE5460B8732A9F1C /* GoodThenIm */ = {
+    DE5460B8732A9F1C /* EvaOne */ = {
       isa = PBXNativeTarget;
-      buildConfigurationList = E463A2C8710F5B9D /* Build configuration list for PBXNativeTarget "GoodThenIm" */;
+      buildConfigurationList = E463A2C8710F5B9D /* Build configuration list for PBXNativeTarget "EvaOne" */;
       buildPhases = (
         93DA0647C25F18BE /* Sources */,
         0A14CE5BD2F93687 /* Frameworks */
@@ -123,14 +125,14 @@
       );
       dependencies = (
       );
-      name = "GoodThenIm";
-      productName = "GoodThenIm";
-      productReference = FE012345D6789ABC /* GoodThenIm.app */;
+      name = "EvaOne";
+      productName = "EvaOne";
+      productReference = FE012345D6789ABC /* EvaOne.app */;
       productType = "com.apple.product-type.application";
     };
-    F63B0E17D428AC59 /* GoodThenImTests */ = {
+    F63B0E17D428AC59 /* EvaOneTests */ = {
       isa = PBXNativeTarget;
-      buildConfigurationList = 0C7DBE12438F65A9 /* Build configuration list for PBXNativeTarget "GoodThenImTests" */;
+      buildConfigurationList = 0C7DBE12438F65A9 /* Build configuration list for PBXNativeTarget "EvaOneTests" */;
       buildPhases = (
         2749BE8CFD56103A /* Sources */,
         6C5943FBA271ED08 /* Frameworks */
@@ -140,14 +142,14 @@
       dependencies = (
         512E47D8C63BA09F /* PBXTargetDependency */
       );
-      name = "GoodThenImTests";
-      productName = "GoodThenImTests";
-      productReference = B7E6AF3CD5902841 /* GoodThenImTests.xctest */;
+      name = "EvaOneTests";
+      productName = "EvaOneTests";
+      productReference = B7E6AF3CD5902841 /* EvaOneTests.xctest */;
       productType = "com.apple.product-type.bundle.unit-test";
     };
-    05718BC42A96FD3E /* GoodThenImUITests */ = {
+    05718BC42A96FD3E /* EvaOneUITests */ = {
       isa = PBXNativeTarget;
-      buildConfigurationList = 750C3DB6EF1249A8 /* Build configuration list for PBXNativeTarget "GoodThenImUITests" */;
+      buildConfigurationList = 750C3DB6EF1249A8 /* Build configuration list for PBXNativeTarget "EvaOneUITests" */;
       buildPhases = (
         57FB690D1283CE4A /* Sources */,
         E1F8A604D97BC523 /* Frameworks */
@@ -157,9 +159,9 @@
       dependencies = (
         1FD58037AC4296BE /* PBXTargetDependency */
       );
-      name = "GoodThenImUITests";
-      productName = "GoodThenImUITests";
-      productReference = 6DB2CE41A70359F8 /* GoodThenImUITests.xctest */;
+      name = "EvaOneUITests";
+      productName = "EvaOneUITests";
+      productReference = 6DB2CE41A70359F8 /* EvaOneUITests.xctest */;
       productType = "com.apple.product-type.bundle.ui-testing";
     };
     /* End PBXNativeTarget section */
@@ -184,7 +186,7 @@
           };
         };
       };
-      buildConfigurationList = C745D08BE913A2F6 /* Build configuration list for PBXProject "GoodThenIm" */;
+      buildConfigurationList = C745D08BE913A2F6 /* Build configuration list for PBXProject "EvaOne" */;
       compatibilityVersion = "Xcode 14.0";
       developmentRegion = en;
       hasScannedForEncodings = 0;
@@ -197,9 +199,9 @@
       projectDirPath = "";
       projectRoot = "";
       targets = (
-        DE5460B8732A9F1C /* GoodThenIm */,
-        F63B0E17D428AC59 /* GoodThenImTests */,
-        05718BC42A96FD3E /* GoodThenImUITests */
+        DE5460B8732A9F1C /* EvaOne */,
+        F63B0E17D428AC59 /* EvaOneTests */,
+        05718BC42A96FD3E /* EvaOneUITests */
       );
     };
     /* End PBXProject section */
@@ -214,7 +216,7 @@
         01C5BA896F27D3E4,
         E02835BA71D649FC,
         A1B2C3D4E5F60789,
-        74D689B5AC2E10F3
+        9F8E7D6C5B4A3928
       );
       runOnlyForDeploymentPostprocessing = 0;
     };
@@ -222,7 +224,7 @@
       isa = PBXSourcesBuildPhase;
       buildActionMask = 2147483647;
       files = (
-        28396FAC5D107EB4 /* GoodThenImTests.swift in Sources */
+        28396FAC5D107EB4 /* EvaOneTests.swift in Sources */
       );
       runOnlyForDeploymentPostprocessing = 0;
     };
@@ -230,7 +232,7 @@
       isa = PBXSourcesBuildPhase;
       buildActionMask = 2147483647;
       files = (
-        06512DF7C83BA9E4 /* GoodThenImUITests.swift in Sources */
+        06512DF7C83BA9E4 /* EvaOneUITests.swift in Sources */
       );
       runOnlyForDeploymentPostprocessing = 0;
     };
@@ -242,26 +244,26 @@
       containerPortal = 06D379FC124EB85A /* Project object */;
       proxyType = 1;
       remoteGlobalIDString = DE5460B8732A9F1C;
-      remoteInfo = "GoodThenIm";
+      remoteInfo = "EvaOne";
     };
     3C809FBA641D257E /* PBXContainerItemProxy */ = {
       isa = PBXContainerItemProxy;
       containerPortal = 06D379FC124EB85A /* Project object */;
       proxyType = 1;
       remoteGlobalIDString = DE5460B8732A9F1C;
-      remoteInfo = "GoodThenIm";
+      remoteInfo = "EvaOne";
     };
     /* End PBXContainerItemProxy section */
 
     /* Begin PBXTargetDependency section */
     512E47D8C63BA09F /* PBXTargetDependency */ = {
       isa = PBXTargetDependency;
-      target = DE5460B8732A9F1C /* GoodThenIm */;
+      target = DE5460B8732A9F1C /* EvaOne */;
       targetProxy = B73A86DC2F59410E /* PBXContainerItemProxy */;
     };
     1FD58037AC4296BE /* PBXTargetDependency */ = {
       isa = PBXTargetDependency;
-      target = DE5460B8732A9F1C /* GoodThenIm */;
+      target = DE5460B8732A9F1C /* EvaOne */;
       targetProxy = 3C809FBA641D257E /* PBXContainerItemProxy */;
     };
     /* End PBXTargetDependency section */
@@ -310,7 +312,7 @@
         MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
         MTL_FAST_MATH = YES;
         ONLY_ACTIVE_ARCH = YES;
-        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim";
+        PRODUCT_BUNDLE_IDENTIFIER = "com.mentallycreativestudios.evaone";
         PRODUCT_NAME = "$(TARGET_NAME)";
         SDKROOT = iphoneos;
         SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -361,7 +363,7 @@
         MARKETING_VERSION = 1.0;
         MTL_ENABLE_DEBUG_INFO = NO;
         MTL_FAST_MATH = YES;
-        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim";
+        PRODUCT_BUNDLE_IDENTIFIER = "com.mentallycreativestudios.evaone";
         PRODUCT_NAME = "$(TARGET_NAME)";
         SDKROOT = iphoneos;
         SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -385,7 +387,7 @@
         GENERATE_INFOPLIST_FILE = YES;
         IPHONEOS_DEPLOYMENT_TARGET = 15.0;
         MARKETING_VERSION = 1.0;
-        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim.Tests";
+        PRODUCT_BUNDLE_IDENTIFIER = "com.mentallycreativestudios.evaone.tests";
         PRODUCT_NAME = "$(TARGET_NAME)";
         SDKROOT = iphoneos;
         SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -394,7 +396,7 @@
         SWIFT_EMIT_LOC_STRINGS = NO;
         SWIFT_VERSION = 5.0;
         TARGETED_DEVICE_FAMILY = "1,2";
-        TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoodThenIm.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GoodThenIm";
+        TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EvaOne.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EvaOne";
       };
       name = Debug;
     };
@@ -407,7 +409,7 @@
         GENERATE_INFOPLIST_FILE = YES;
         IPHONEOS_DEPLOYMENT_TARGET = 15.0;
         MARKETING_VERSION = 1.0;
-        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim.Tests";
+        PRODUCT_BUNDLE_IDENTIFIER = "com.mentallycreativestudios.evaone.tests";
         PRODUCT_NAME = "$(TARGET_NAME)";
         SDKROOT = iphoneos;
         SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -416,7 +418,7 @@
         SWIFT_EMIT_LOC_STRINGS = NO;
         SWIFT_VERSION = 5.0;
         TARGETED_DEVICE_FAMILY = "1,2";
-        TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GoodThenIm.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GoodThenIm";
+        TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EvaOne.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EvaOne";
         VALIDATE_PRODUCT = YES;
       };
       name = Release;
@@ -428,7 +430,7 @@
         CURRENT_PROJECT_VERSION = 1;
         GENERATE_INFOPLIST_FILE = YES;
         MARKETING_VERSION = 1.0;
-        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim.UITests";
+        PRODUCT_BUNDLE_IDENTIFIER = "com.mentallycreativestudios.evaone.uitests";
         PRODUCT_NAME = "$(TARGET_NAME)";
         SDKROOT = iphoneos;
         SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -437,7 +439,7 @@
         SWIFT_EMIT_LOC_STRINGS = NO;
         SWIFT_VERSION = 5.0;
         TARGETED_DEVICE_FAMILY = "1,2";
-        TEST_TARGET_NAME = GoodThenIm;
+        TEST_TARGET_NAME = EvaOne;
       };
       name = Debug;
     };
@@ -448,7 +450,7 @@
         CURRENT_PROJECT_VERSION = 1;
         GENERATE_INFOPLIST_FILE = YES;
         MARKETING_VERSION = 1.0;
-        PRODUCT_BUNDLE_IDENTIFIER = "com.example.goodthenim.UITests";
+        PRODUCT_BUNDLE_IDENTIFIER = "com.mentallycreativestudios.evaone.uitests";
         PRODUCT_NAME = "$(TARGET_NAME)";
         SDKROOT = iphoneos;
         SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -457,7 +459,7 @@
         SWIFT_EMIT_LOC_STRINGS = NO;
         SWIFT_VERSION = 5.0;
         TARGETED_DEVICE_FAMILY = "1,2";
-        TEST_TARGET_NAME = GoodThenIm;
+        TEST_TARGET_NAME = EvaOne;
         VALIDATE_PRODUCT = YES;
       };
       name = Release;
@@ -465,7 +467,7 @@
     /* End XCBuildConfiguration section */
 
     /* Begin XCConfigurationList section */
-    C745D08BE913A2F6 /* Build configuration list for PBXProject "GoodThenIm" */ = {
+    C745D08BE913A2F6 /* Build configuration list for PBXProject "EvaOne" */ = {
       isa = XCConfigurationList;
       buildConfigurations = (
         697A4321CFD05E8B /* Debug */,
@@ -474,7 +476,7 @@
       defaultConfigurationIsVisible = 0;
       defaultConfigurationName = Release;
     };
-    E463A2C8710F5B9D /* Build configuration list for PBXNativeTarget "GoodThenIm" */ = {
+    E463A2C8710F5B9D /* Build configuration list for PBXNativeTarget "EvaOne" */ = {
       isa = XCConfigurationList;
       buildConfigurations = (
         697A4321CFD05E8B /* Debug */,
@@ -483,7 +485,7 @@
       defaultConfigurationIsVisible = 0;
       defaultConfigurationName = Release;
     };
-    0C7DBE12438F65A9 /* Build configuration list for PBXNativeTarget "GoodThenImTests" */ = {
+    0C7DBE12438F65A9 /* Build configuration list for PBXNativeTarget "EvaOneTests" */ = {
       isa = XCConfigurationList;
       buildConfigurations = (
         37A9EBF8C104D256 /* Debug */,
@@ -492,7 +494,7 @@
       defaultConfigurationIsVisible = 0;
       defaultConfigurationName = Release;
     };
-    750C3DB6EF1249A8 /* Build configuration list for PBXNativeTarget "GoodThenImUITests" */ = {
+    750C3DB6EF1249A8 /* Build configuration list for PBXNativeTarget "EvaOneUITests" */ = {
       isa = XCConfigurationList;
       buildConfigurations = (
         63E20517DB9AF48C /* Debug */,

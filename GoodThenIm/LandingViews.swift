@@ -4,14 +4,14 @@ struct HomeView: View {
     @EnvironmentObject var state: AppStateManager
 
     private let highlights: [StatItem] = [
-        .init(value: "50K+", label: "Creators"),
-        .init(value: "1.2M+", label: "AI Assets"),
-        .init(value: "$12M+", label: "Creator Payouts"),
-        .init(value: "99.9%", label: "Uptime")
+        .init(value: "Local-first", label: "Private control"),
+        .init(value: "Human-approved", label: "Execution model"),
+        .init(value: "Session-only", label: "Web access"),
+        .init(value: "SwiftUI", label: "Native iOS build")
     ]
 
     private let partnerMarks: [String] = [
-        "Nova Engine", "Photon Compute", "ChainSphere", "OrbitX", "Lattice AI"
+        "Chief of Staff", "Workflow Control", "Private Memory", "Action Approval", "Creator Operations"
     ]
 
     var body: some View {
@@ -33,7 +33,7 @@ struct HomeView: View {
                     .tracking(3)
                     .foregroundStyle(.cyan.opacity(0.85))
 
-                Text("EVA ONE")
+                Text("Eva.One")
                     .font(.system(size: 56, weight: .black, design: .rounded))
                     .foregroundStyle(
                         LinearGradient(colors: [.purple, .cyan], startPoint: .leading, endPoint: .trailing)
@@ -91,7 +91,7 @@ struct HomeView: View {
                 Spacer()
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("TRUSTED BY INNOVATORS WORLDWIDE")
+                    Text("Early-stage product principles")
                         .font(.caption2)
                         .tracking(2)
                         .foregroundStyle(.white.opacity(0.55))
@@ -144,7 +144,7 @@ struct HomeView: View {
 
     private var header: some View {
         HStack {
-            Label("EVA ONE", systemImage: "circle.hexagongrid.fill")
+            Label("Eva.One", systemImage: "circle.hexagongrid.fill")
                 .font(.headline.weight(.semibold))
                 .foregroundStyle(.white)
 
