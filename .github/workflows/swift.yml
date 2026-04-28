@@ -14,15 +14,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Connect Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - name: Show Xcode version
         run: xcodebuild -version
+
+      - name: Resolve simulator destination
+        id: simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          DESTINATION=$(xcrun simctl list devices available | \
+            awk -F '[()]' '/iPhone/ {print $2; exit}')
+
+          if [[ -z "${DESTINATION:-}" ]]; then
+            echo "No available iPhone simulator found." >&2
+            exit 1
+          fi
+
+          echo "destination=id=$DESTINATION" >> "$GITHUB_OUTPUT"
+          echo "Using simulator destination id=$DESTINATION"
 
       - name: Build (iOS Simulator)
         run: |
           xcodebuild \
             -project GoodThenIm.xcodeproj \
             -scheme GoodThenIm \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -destination '${{ steps.simulator.outputs.destination }}' \
             -configuration Debug \
             build
 
@@ -31,6 +52,6 @@ jobs:
           xcodebuild \
             -project GoodThenIm.xcodeproj \
             -scheme GoodThenIm \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -destination '${{ steps.simulator.outputs.destination }}' \
             -configuration Debug \
             test
