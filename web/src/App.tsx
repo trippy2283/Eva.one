@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import {
   ActionLog,
   ApprovalRequest,
@@ -20,19 +20,60 @@ const roles: RoleMode[] = [
 ];
 
 const localId = () => Math.random().toString(36).slice(2, 10);
+const STORAGE_KEY = 'evaoneai-web-v1-state';
+
+type AppLocalState = {
+  tasks: Task[];
+  projects: Project[];
+  memory: MemoryItem[];
+  approvals: ApprovalRequest[];
+  logs: ActionLog[];
+};
+
+const defaultLocalState: AppLocalState = {
+  tasks: [],
+  projects: [],
+  memory: [],
+  approvals: [],
+  logs: []
+};
+
+const loadLocalState = (): AppLocalState => {
+  const raw = window.localStorage.getItem(STORAGE_KEY);
+  if (!raw) return defaultLocalState;
+
+  try {
+    const parsed = JSON.parse(raw) as Partial<AppLocalState>;
+    return {
+      tasks: parsed.tasks ?? [],
+      projects: parsed.projects ?? [],
+      memory: parsed.memory ?? [],
+      approvals: parsed.approvals ?? [],
+      logs: parsed.logs ?? []
+    };
+  } catch {
+    return defaultLocalState;
+  }
+};
 
 export default function App() {
+  const hydratedState = useMemo(loadLocalState, []);
   const [activeView, setActiveView] = useState<'Home' | 'Command' | 'Tasks' | 'Projects' | 'Memory' | 'Settings'>('Home');
   const [role, setRole] = useState<RoleMode>('Chief of Staff');
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [memory, setMemory] = useState<MemoryItem[]>([]);
-  const [approvals, setApprovals] = useState<ApprovalRequest[]>([]);
-  const [logs, setLogs] = useState<ActionLog[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(hydratedState.tasks);
+  const [projects, setProjects] = useState<Project[]>(hydratedState.projects);
+  const [memory, setMemory] = useState<MemoryItem[]>(hydratedState.memory);
+  const [approvals, setApprovals] = useState<ApprovalRequest[]>(hydratedState.approvals);
+  const [logs, setLogs] = useState<ActionLog[]>(hydratedState.logs);
 
   const pendingApprovals = useMemo(() => approvals.filter((a) => a.status === 'Pending').length, [approvals]);
+
+  useEffect(() => {
+    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+  }, [tasks, projects, memory, approvals, logs]);
 
   const addLog = (summary: string, status: ActionLog['status']) => {
     setLogs((prev) => [{ id: localId(), summary, status, createdAt: new Date().toISOString() }, ...prev]);
