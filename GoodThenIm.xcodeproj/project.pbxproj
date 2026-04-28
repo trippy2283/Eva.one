@@ -12,7 +12,6 @@
     01C5BA896F27D3E4 /* EVADataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308912D67EA54CBF; };
     E02835BA71D649FC /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB01CD5492837FA6; };
     A1B2C3D4E5F60789 /* LandingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60788; };
-    74D689B5AC2E10F3 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 86AE239DCF107B45; };
     28396FAC5D107EB4 /* GoodThenImTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2CE83967154BDA; };
     06512DF7C83BA9E4 /* GoodThenImUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB608AFD351249; };
     620BCE795A1843DF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABE39C71F58046D; };
@@ -25,7 +24,6 @@
     308912D67EA54CBF /* EVADataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EVADataModels.swift"; sourceTree = "<group>"; };
     EB01CD5492837FA6 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainTabView.swift"; sourceTree = "<group>"; };
     A1B2C3D4E5F60788 /* LandingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LandingViews.swift"; sourceTree = "<group>"; };
-    86AE239DCF107B45 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text.markdown; path = "README.md"; sourceTree = "<group>"; };
     0F2CE83967154BDA /* GoodThenImTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoodThenImTests.swift"; sourceTree = "<group>"; };
     7CEB608AFD351249 /* GoodThenImUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoodThenImUITests.swift"; sourceTree = "<group>"; };
     B7E6AF3CD5902841 /* GoodThenImTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GoodThenImTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,7 +75,6 @@
         308912D67EA54CBF,
         EB01CD5492837FA6,
         A1B2C3D4E5F60788,
-        86AE239DCF107B45
       );
       path = "GoodThenIm";
       sourceTree = "<group>";
@@ -214,7 +211,6 @@
         01C5BA896F27D3E4,
         E02835BA71D649FC,
         A1B2C3D4E5F60789,
-        74D689B5AC2E10F3
       );
       runOnlyForDeploymentPostprocessing = 0;
     };
