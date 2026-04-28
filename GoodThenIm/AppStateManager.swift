@@ -3,7 +3,7 @@ import SwiftUI
 
 @MainActor
 final class AppStateManager: ObservableObject {
-    @Published var roleMode: EvaRoleMode = .chiefOfStaff
+    @Published private(set) var roleMode: EvaRoleMode = .chiefOfStaff
     @Published private(set) var tasks: [EvaTask] = []
     @Published private(set) var projects: [EvaProject] = []
     @Published private(set) var memoryItems: [EvaMemoryItem] = []
@@ -23,6 +23,13 @@ final class AppStateManager: ObservableObject {
 
     var pendingApprovalsCount: Int {
         approvals.filter { $0.status == .pending }.count
+    }
+
+    func updateRoleMode(_ newMode: EvaRoleMode) {
+        guard roleMode != newMode else { return }
+        roleMode = newMode
+        addLog("Role mode changed to \(newMode.rawValue).", status: .saved)
+        persistState()
     }
 
     func runCommand(prompt: String) -> String {
@@ -145,6 +152,7 @@ final class AppStateManager: ObservableObject {
 
     private func persistState() {
         let state = EvaLocalState(
+            roleMode: roleMode,
             tasks: tasks,
             projects: projects,
             memoryItems: memoryItems,
@@ -165,6 +173,7 @@ final class AppStateManager: ObservableObject {
             return
         }
 
+        roleMode = state.roleMode
         tasks = state.tasks
         projects = state.projects
         memoryItems = state.memoryItems
