@@ -1,13 +1,13 @@
 # Eva.one
 
-EvaOneAI now includes a runnable web foundation for a local-first executive orchestration interface.
+Eva.One now includes a runnable web foundation for a local-first executive orchestration interface.
 
 ## Web App (V1 Foundation)
 
 Path: `web/`
 
 ### Features included
-- EvaOneAI branded hero/landing section
+- Eva.One branded hero/landing section
 - Mobile-first bottom navigation (Home, Command, Tasks, Projects, Memory, Settings)
 - AI Command Center with role selector and prompt input
 - Local-only task, project, memory, and approval creation
