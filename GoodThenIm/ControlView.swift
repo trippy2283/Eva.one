@@ -5,88 +5,81 @@ struct ControlView: View {
 
     var body: some View {
         List {
-            Section("System State") {
-                HStack {
-                    Label(
-                        state.isActive ? "Active" : "Locked",
-                        systemImage: state.isActive ? "bolt.shield.fill" : "lock.shield.fill"
-                    )
-                    Spacer()
-                    Text(state.currentMode.displayName)
+            Section("Approvals") {
+                if state.approvals.isEmpty {
+                    Text("No approval requests yet.")
                         .foregroundStyle(.secondary)
                 }
 
-                Toggle("EVA Active", isOn: Binding(
-                    get: { state.isActive },
-                    set: { isOn in
-                        if isOn {
-                            Task {
-                                await state.requestReactivation(into: .observe)
+                ForEach(state.approvals) { item in
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(item.title).bold()
+                        Text(item.description).font(.subheadline)
+                        Text("Status: \(item.status.rawValue)")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+
+                        if item.status == .pending {
+                            HStack {
+                                Button("Approve") {
+                                    state.setApprovalStatus(id: item.id, status: .approved)
+                                }
+                                .buttonStyle(.borderedProminent)
+
+                                Button("Reject", role: .destructive) {
+                                    state.setApprovalStatus(id: item.id, status: .rejected)
+                                }
+                                .buttonStyle(.bordered)
                             }
-                        } else {
-                            state.deactivate()
                         }
                     }
-                ))
-                .tint(state.isActive ? .green : .red)
-
-                Picker("Mode", selection: Binding(
-                    get: { state.currentMode },
-                    set: { state.setMode($0) }
-                )) {
-                    ForEach(EVAMode.allCases.filter { $0 != .sleep }) { mode in
-                        Text(mode.displayName).tag(mode)
-                    }
+                    .padding(.vertical, 4)
                 }
-                .disabled(!state.isActive)
             }
 
-            Section("Permissions") {
-                Toggle("Web Access (Session Only)", isOn: Binding(
-                    get: { state.isWebEnabled },
-                    set: { enabled in
-                        if enabled {
-                            state.enableWebAccess(for: 15)
-                        } else {
-                            state.disableWebAccess()
-                        }
-                    }
-                ))
-                .disabled(!state.isActive)
-
-                if let expiry = state.webAccessExpiresAt {
-                    Text("Expires: \(expiry.formatted(date: .abbreviated, time: .shortened))")
-                        .font(.footnote)
+            Section("Recent Sessions") {
+                if state.sessions.isEmpty {
+                    Text("No command sessions yet.")
                         .foregroundStyle(.secondary)
                 }
-            }
 
-            Section("Security") {
-                Button("Reactivate EVA") {
-                    Task {
-                        await state.requestReactivation(into: .observe)
+                ForEach(state.sessions.prefix(5)) { session in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(session.roleMode.rawValue).bold()
+                        Text(session.prompt).font(.subheadline)
+                        Text(session.createdAt.formatted(date: .abbreviated, time: .shortened))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
-                .disabled(state.isActive)
+            }
 
-                Button("Force Reset & Lock", role: .destructive) {
-                    state.deactivate()
+            Section("Action Log") {
+                if state.actionLogs.isEmpty {
+                    Text("Action log is empty.")
+                        .foregroundStyle(.secondary)
+                }
+
+                ForEach(state.actionLogs.prefix(15)) { log in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(log.summary)
+                        Text("\(log.status.rawValue) • \(log.createdAt.formatted(date: .abbreviated, time: .shortened))")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 2)
                 }
             }
 
-            if let event = state.lastSecurityEvent {
-                Section("Last Security Event") {
-                    Text(event)
-                }
-            }
-
-            if let error = state.lastError {
-                Section("Last Error") {
-                    Text(error)
-                        .foregroundStyle(.red)
-                }
+            Section("System") {
+                Text("App mode: Local-first iOS foundation")
+                Text("AI provider: Not connected")
+                Text("Integrations: Not connected")
+                Text("External actions require approval and configured integrations.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Control")
+        .navigationTitle("Settings")
     }
 }

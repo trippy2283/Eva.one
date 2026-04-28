@@ -1,152 +1,123 @@
 import Foundation
-import SwiftData
 
-enum EVAMode: String, Codable, CaseIterable, Identifiable {
-    case sleep
-    case observe
-    case assist
-    case execute
-
-    var id: String { rawValue }
-
-    var displayName: String {
-        switch self {
-        case .sleep: "Sleep"
-        case .observe: "Observe"
-        case .assist: "Assist"
-        case .execute: "Execute"
-        }
-    }
-}
-
-enum MemoryCategory: String, Codable, CaseIterable, Identifiable {
-    case preference = "Preference"
-    case workflow = "Workflow"
-    case forbiddenZone = "ForbiddenZone"
-    case profile = "Profile"
-    case project = "Project"
+enum EvaRoleMode: String, Codable, CaseIterable, Identifiable {
+    case chiefOfStaff = "Chief of Staff"
+    case ceoFilter = "CEO Filter"
+    case executiveAssistant = "Executive Assistant"
+    case creativeDirector = "Creative Director"
+    case researchAnalyst = "Research Analyst"
+    case operationsCoordinator = "Operations Coordinator"
+    case appConnector = "App Connector"
+    case agenticOrchestrator = "Agentic AI Orchestrator"
 
     var id: String { rawValue }
 }
 
-enum ActionStatus: String, Codable, CaseIterable, Identifiable {
-    case executed = "Executed"
-    case blocked = "Blocked"
-    case pendingApproval = "PendingApproval"
+enum EvaTaskStatus: String, Codable, CaseIterable, Identifiable {
+    case open = "Open"
+    case inProgress = "In Progress"
+    case done = "Done"
+
+    var id: String { rawValue }
+}
+
+enum EvaPriority: String, Codable, CaseIterable, Identifiable {
+    case low = "Low"
+    case medium = "Medium"
+    case high = "High"
+    case urgent = "Urgent"
+
+    var id: String { rawValue }
+}
+
+enum EvaApprovalStatus: String, Codable, CaseIterable, Identifiable {
+    case pending = "Pending"
+    case approved = "Approved"
+    case rejected = "Rejected"
+
+    var id: String { rawValue }
+}
+
+enum EvaLogStatus: String, Codable, CaseIterable, Identifiable {
+    case done = "Done"
     case drafted = "Drafted"
+    case prepared = "Prepared"
+    case needsApproval = "Needs Approval"
+    case blocked = "Blocked"
     case failed = "Failed"
+    case saved = "Saved"
 
     var id: String { rawValue }
 }
 
-enum ApprovalLevel: String, Codable, CaseIterable, Identifiable {
-    case automatic = "Automatic"
-    case confirmSensitive = "ConfirmSensitive"
-    case confirmAll = "ConfirmAll"
+enum EvaMemoryCategory: String, Codable, CaseIterable, Identifiable {
+    case userPreference = "User preference"
+    case businessContext = "Business context"
+    case projectContext = "Project context"
+    case writingStyle = "Writing style"
+    case creativeDirection = "Creative direction"
+    case contactContext = "Contact/context note"
+    case systemInstruction = "System instruction"
 
     var id: String { rawValue }
 }
 
-@Model
-final class MemoryItem {
-    @Attribute(.unique) var id: UUID
-    var timestamp: Date
-    var content: String
-    var category: MemoryCategory
-    var isPinned: Bool
-    var tags: [String]
-    var source: String?
-
-    init(
-        content: String,
-        category: MemoryCategory,
-        isPinned: Bool = false,
-        tags: [String] = [],
-        source: String? = nil
-    ) {
-        self.id = UUID()
-        self.timestamp = Date()
-        self.content = content
-        self.category = category
-        self.isPinned = isPinned
-        self.tags = tags
-        self.source = source
-    }
+struct EvaTask: Codable, Identifiable {
+    let id: UUID
+    var title: String
+    var notes: String
+    var status: EvaTaskStatus
+    var priority: EvaPriority
+    var projectID: UUID?
+    var createdAt: Date
 }
 
-@Model
-final class ActionLog {
-    @Attribute(.unique) var id: UUID
-    var timestamp: Date
-    var actionDescription: String
-    var status: ActionStatus
-    var modeAtExecution: EVAMode
-    var requiresApproval: Bool
-    var errorMessage: String?
-
-    init(
-        description: String,
-        status: ActionStatus,
-        modeAtExecution: EVAMode,
-        requiresApproval: Bool = false,
-        errorMessage: String? = nil
-    ) {
-        self.id = UUID()
-        self.timestamp = Date()
-        self.actionDescription = description
-        self.status = status
-        self.modeAtExecution = modeAtExecution
-        self.requiresApproval = requiresApproval
-        self.errorMessage = errorMessage
-    }
-}
-
-@Model
-final class WorkflowPreset {
-    @Attribute(.unique) var id: UUID
+struct EvaProject: Codable, Identifiable {
+    let id: UUID
     var name: String
-    var defaultMode: EVAMode
-    var allowsWeb: Bool
-    var approvalLevel: ApprovalLevel
-    var responseStyle: String
-
-    init(
-        name: String,
-        defaultMode: EVAMode,
-        allowsWeb: Bool = false,
-        approvalLevel: ApprovalLevel = .confirmSensitive,
-        responseStyle: String = "Executive"
-    ) {
-        self.id = UUID()
-        self.name = name
-        self.defaultMode = defaultMode
-        self.allowsWeb = allowsWeb
-        self.approvalLevel = approvalLevel
-        self.responseStyle = responseStyle
-    }
+    var description: String
+    var status: String
+    var goals: [String]
+    var createdAt: Date
 }
 
-@Model
-final class AppSettings {
-    @Attribute(.unique) var id: UUID
-    var biometricReactivationRequired: Bool
-    var webSessionMinutes: Int
-    var approvalLevel: ApprovalLevel
-    var hardLocked: Bool
-    var voicePersonaName: String
+struct EvaMemoryItem: Codable, Identifiable {
+    let id: UUID
+    var title: String
+    var content: String
+    var category: EvaMemoryCategory
+    var isActive: Bool
+    var createdAt: Date
+}
 
-    init(
-        biometricReactivationRequired: Bool = true,
-        webSessionMinutes: Int = 15,
-        approvalLevel: ApprovalLevel = .confirmSensitive,
-        hardLocked: Bool = true,
-        voicePersonaName: String = "Eva"
-    ) {
-        self.id = UUID()
-        self.biometricReactivationRequired = biometricReactivationRequired
-        self.webSessionMinutes = webSessionMinutes
-        self.approvalLevel = approvalLevel
-        self.hardLocked = hardLocked
-        self.voicePersonaName = voicePersonaName
-    }
+struct EvaApprovalRequest: Codable, Identifiable {
+    let id: UUID
+    var title: String
+    var description: String
+    var status: EvaApprovalStatus
+    var createdAt: Date
+}
+
+struct EvaActionLog: Codable, Identifiable {
+    let id: UUID
+    var summary: String
+    var status: EvaLogStatus
+    var createdAt: Date
+}
+
+struct EvaSession: Codable, Identifiable {
+    let id: UUID
+    var roleMode: EvaRoleMode
+    var prompt: String
+    var response: String
+    var createdAt: Date
+}
+
+struct EvaLocalState: Codable {
+    var tasks: [EvaTask]
+    var projects: [EvaProject]
+    var memoryItems: [EvaMemoryItem]
+    var approvals: [EvaApprovalRequest]
+    var actionLogs: [EvaActionLog]
+    var sessions: [EvaSession]
 }
