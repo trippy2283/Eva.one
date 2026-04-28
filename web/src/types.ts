@@ -54,6 +54,9 @@ export interface ApprovalRequest {
   title: string;
   description: string;
   status: 'Pending' | 'Approved' | 'Rejected';
+  actionType: 'External Send' | 'Integration Connect' | 'Integration Handoff';
+  integrationId?: string;
+  payload?: string;
 }
 
 export interface ActionLog {
@@ -69,4 +72,12 @@ export interface AISession {
   title: string;
   summary: string;
   createdAt: string;
+}
+
+export interface Integration {
+  id: string;
+  provider: 'Gestalt Visions';
+  status: 'Disconnected' | 'Pending Approval' | 'Connected';
+  scopes: string[];
+  lastSyncAt?: string;
 }

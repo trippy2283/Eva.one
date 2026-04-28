@@ -3,6 +3,7 @@ import {
   ActionLog,
   AISession,
   ApprovalRequest,
+  Integration,
   MemoryItem,
   Project,
   RoleMode,
@@ -31,7 +32,16 @@ const memoryCategories: MemoryItem['category'][] = [
 ];
 
 const localId = () => Math.random().toString(36).slice(2, 10);
-const STORAGE_KEY = 'evaoneai-web-v1-state';
+const STORAGE_KEY = 'evaoneai-web-v2-state';
+
+const defaultIntegrations: Integration[] = [
+  {
+    id: 'gestalt-visions',
+    provider: 'Gestalt Visions',
+    status: 'Disconnected',
+    scopes: ['Read project plan handoff', 'Write approved campaign brief', 'Read approved asset checklist']
+  }
+];
 
 type AppLocalState = {
   tasks: Task[];
@@ -40,6 +50,7 @@ type AppLocalState = {
   approvals: ApprovalRequest[];
   logs: ActionLog[];
   sessions: AISession[];
+  integrations: Integration[];
 };
 
 const defaultLocalState: AppLocalState = {
@@ -48,7 +59,8 @@ const defaultLocalState: AppLocalState = {
   memory: [],
   approvals: [],
   logs: [],
-  sessions: []
+  sessions: [],
+  integrations: defaultIntegrations
 };
 
 const loadLocalState = (): AppLocalState => {
@@ -63,7 +75,8 @@ const loadLocalState = (): AppLocalState => {
       memory: parsed.memory ?? [],
       approvals: parsed.approvals ?? [],
       logs: parsed.logs ?? [],
-      sessions: parsed.sessions ?? []
+      sessions: parsed.sessions ?? [],
+      integrations: parsed.integrations?.length ? parsed.integrations : defaultIntegrations
     };
   } catch {
     return defaultLocalState;
@@ -82,14 +95,21 @@ export default function App() {
   const [approvals, setApprovals] = useState<ApprovalRequest[]>(hydratedState.approvals);
   const [logs, setLogs] = useState<ActionLog[]>(hydratedState.logs);
   const [sessions, setSessions] = useState<AISession[]>(hydratedState.sessions);
+  const [integrations, setIntegrations] = useState<Integration[]>(hydratedState.integrations);
 
   const pendingApprovals = useMemo(() => approvals.filter((a) => a.status === 'Pending').length, [approvals]);
   const openTasks = useMemo(() => tasks.filter((t) => t.status !== 'Done').length, [tasks]);
+  const activeProjects = useMemo(() => projects.filter((p) => p.status !== 'Paused').length, [projects]);
+
+  const gestaltConnection = useMemo(
+    () => integrations.find((integration) => integration.provider === 'Gestalt Visions'),
+    [integrations]
+  );
 
   useEffect(() => {
-    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs, sessions };
+    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs, sessions, integrations };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
-  }, [tasks, projects, memory, approvals, logs, sessions]);
+  }, [tasks, projects, memory, approvals, logs, sessions, integrations]);
 
   const addLog = (summary: string, status: ActionLog['status']) => {
     setLogs((prev) => [{ id: localId(), summary, status, createdAt: new Date().toISOString() }, ...prev]);
@@ -104,7 +124,10 @@ export default function App() {
       `Recommendation (${role}): ${cleanPrompt}`,
       '',
       'Draft: I outlined your next steps and saved this command as a local session.',
-      'Prepared action: External execution is not performed in local-only mode and needs approval.'
+      'Prepared action: External execution is not performed in local-only mode and needs approval.',
+      gestaltConnection?.status === 'Connected'
+        ? 'Integration note: Gestalt Visions is connected for approved handoffs.'
+        : 'Integration note: Gestalt Visions is not connected yet. I can prepare the connection request.'
     ].join('\n');
 
     setResponse(drafted);
@@ -148,15 +171,91 @@ export default function App() {
       id: localId(),
       title: 'Draft CEO outreach email',
       description: 'Prepared only. Gmail integration is not connected, so this has not been sent.',
-      status: 'Pending'
+      status: 'Pending',
+      actionType: 'External Send'
     };
     setApprovals((prev) => [approval, ...prev]);
     addLog('Approval request created for external action', 'Needs Approval');
   };
 
+  const requestGestaltConnection = () => {
+    const existingPending = approvals.some(
+      (approval) => approval.actionType === 'Integration Connect' && approval.status === 'Pending'
+    );
+
+    if (existingPending) {
+      addLog('Gestalt Visions connection request already pending approval', 'Needs Human Step');
+      return;
+    }
+
+    setIntegrations((prev) =>
+      prev.map((integration) =>
+        integration.provider === 'Gestalt Visions' ? { ...integration, status: 'Pending Approval' } : integration
+      )
+    );
+
+    const approval: ApprovalRequest = {
+      id: localId(),
+      title: 'Connect Gestalt Visions app',
+      description:
+        'Prepared connection request only. Approval is required before EvaOneAI marks Gestalt Visions as connected.',
+      status: 'Pending',
+      actionType: 'Integration Connect',
+      integrationId: 'gestalt-visions',
+      payload: JSON.stringify({ provider: 'Gestalt Visions', requestedScopes: gestaltConnection?.scopes ?? [] })
+    };
+    setApprovals((prev) => [approval, ...prev]);
+    addLog('Prepared Gestalt Visions integration approval request', 'Needs Approval');
+  };
+
+  const prepareGestaltHandoff = () => {
+    if (gestaltConnection?.status !== 'Connected') {
+      addLog('Gestalt Visions handoff blocked because app is not connected', 'Blocked');
+      return;
+    }
+
+    const approval: ApprovalRequest = {
+      id: localId(),
+      title: 'Send project brief to Gestalt Visions',
+      description:
+        'Prepared handoff package from active projects. This request is staged and requires approval before sync.',
+      status: 'Pending',
+      actionType: 'Integration Handoff',
+      integrationId: 'gestalt-visions',
+      payload: JSON.stringify({ projectCount: projects.length, exportedAt: new Date().toISOString() })
+    };
+
+    setApprovals((prev) => [approval, ...prev]);
+    addLog('Prepared Gestalt Visions project handoff request', 'Needs Approval');
+  };
+
   const setApprovalStatus = (id: string, status: 'Approved' | 'Rejected') => {
+    const approval = approvals.find((item) => item.id === id);
+
     setApprovals((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
-    addLog(`Approval ${status.toLowerCase()} by user`, status === 'Approved' ? 'Done' : 'Blocked');
+
+    if (approval?.actionType === 'Integration Connect' && approval.integrationId) {
+      setIntegrations((prev) =>
+        prev.map((integration) => {
+          if (integration.id !== approval.integrationId) return integration;
+          if (status === 'Approved') {
+            return { ...integration, status: 'Connected', lastSyncAt: new Date().toISOString() };
+          }
+          return { ...integration, status: 'Disconnected' };
+        })
+      );
+    }
+
+    if (approval?.actionType === 'Integration Handoff' && approval.integrationId && status === 'Approved') {
+      setIntegrations((prev) =>
+        prev.map((integration) =>
+          integration.id === approval.integrationId ? { ...integration, lastSyncAt: new Date().toISOString() } : integration
+        )
+      );
+      addLog('Gestalt Visions handoff approved and synced', 'Synced');
+    } else {
+      addLog(`Approval ${status.toLowerCase()} by user`, status === 'Approved' ? 'Done' : 'Blocked');
+    }
   };
 
   const cycleTaskStatus = (id: string) => {
@@ -182,6 +281,7 @@ export default function App() {
     setApprovals([]);
     setLogs([]);
     setSessions([]);
+    setIntegrations(defaultIntegrations);
     setResponse('');
     window.localStorage.removeItem(STORAGE_KEY);
   };
@@ -205,12 +305,15 @@ export default function App() {
           <div className="actions">
             <button onClick={() => setActiveView('Command')}>Start Command</button>
             <button className="ghost" onClick={createApproval}>Prepare External Action</button>
+            <button className="ghost" onClick={requestGestaltConnection}>Connect Gestalt Visions</button>
           </div>
         </div>
         <div className="heroCard">
           <p><strong>Mode:</strong> {role}</p>
           <p><strong>Open tasks:</strong> {openTasks}</p>
+          <p><strong>Active projects:</strong> {activeProjects}</p>
           <p><strong>Pending approvals:</strong> {pendingApprovals}</p>
+          <p><strong>Gestalt Visions:</strong> {gestaltConnection?.status ?? 'Unavailable'}</p>
           <p><strong>System status:</strong> Local-only development mode</p>
         </div>
       </section>
@@ -234,8 +337,13 @@ export default function App() {
               <h3>Today’s Priorities</h3>
               <ul>
                 <li>Review pending approvals ({pendingApprovals})</li>
-                <li>Advance active projects ({projects.length})</li>
+                <li>Advance active projects ({activeProjects})</li>
                 <li>Close open tasks ({openTasks})</li>
+                <li>
+                  {gestaltConnection?.status === 'Connected'
+                    ? 'Prepare approved project handoff to Gestalt Visions'
+                    : 'Approve Gestalt Visions connection request'}
+                </li>
               </ul>
             </article>
             <article>
@@ -268,7 +376,12 @@ export default function App() {
                   onChange={(e) => setPrompt(e.target.value)}
                 />
               </label>
-              <button type="submit">Run Command</button>
+              <div className="actions">
+                <button type="submit">Run Command</button>
+                <button type="button" className="ghost" onClick={prepareGestaltHandoff}>
+                  Prepare Gestalt Handoff
+                </button>
+              </div>
             </form>
             {response && <pre>{response}</pre>}
           </section>
@@ -293,7 +406,10 @@ export default function App() {
         {activeView === 'Projects' && (
           <section>
             <h3>Projects</h3>
-            <button onClick={createProject}>Add project</button>
+            <div className="actions">
+              <button onClick={createProject}>Add project</button>
+              <button className="ghost" onClick={prepareGestaltHandoff}>Prepare handoff to Gestalt Visions</button>
+            </div>
             <ul>
               {projects.map((p) => <li key={p.id}>{p.name} · {p.status}</li>)}
               {projects.length === 0 && <li>No projects yet.</li>}
@@ -321,9 +437,22 @@ export default function App() {
           <section>
             <h3>Settings</h3>
             <p>AI provider status: configured through backend gateway only.</p>
-            <p>Connected apps: none connected.</p>
             <p>Privacy: local-only data. External actions remain drafted or prepared.</p>
-            <button className="ghost" onClick={clearLocalState}>Clear local data</button>
+            <h4>Connected apps</h4>
+            <ul>
+              {integrations.map((integration) => (
+                <li key={integration.id}>
+                  <strong>{integration.provider}</strong> — {integration.status}
+                  {integration.lastSyncAt && <> · Last sync: {new Date(integration.lastSyncAt).toLocaleString()}</>}
+                  <br />
+                  Scopes: {integration.scopes.join(', ')}
+                </li>
+              ))}
+            </ul>
+            <div className="actions">
+              <button onClick={requestGestaltConnection}>Request Gestalt Visions Connection</button>
+              <button className="ghost" onClick={clearLocalState}>Clear local data</button>
+            </div>
             <h4>Approvals</h4>
             <ul>
               {approvals.map((a) => (
