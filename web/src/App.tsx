@@ -18,7 +18,8 @@ const roles: RoleMode[] = [
   'Research Analyst',
   'Operations Coordinator',
   'App Connector',
-  'Agentic AI Orchestrator'
+  'Agentic AI Orchestrator',
+  'Video Game Development'
 ];
 
 const memoryCategories: MemoryItem['category'][] = [
@@ -86,6 +87,25 @@ const loadLocalState = (): AppLocalState => {
   }
 };
 
+const getRoleGuidance = (mode: RoleMode): string[] => {
+  if (mode === 'Video Game Development') {
+    return [
+      '- Define the playable loop before expanding features.',
+      '- Separate gameplay systems, UI, save data, assets, input, and performance work.',
+      '- Support mobile touch, keyboard testing, and controller-ready input when applicable.',
+      '- Avoid real-world brands, logos, vehicle models, copyrighted characters, and trademarked assets unless the user owns rights.',
+      '- Convert game ideas into build-ready tasks, prototypes, prompts, mechanics, tuning notes, and QA checks.'
+    ];
+  }
+
+  return [
+    '- Clarify the immediate outcome needed.',
+    '- Break the request into execution steps.',
+    '- Queue any external send, publish, sync, billing, or account-changing action for approval first.',
+    '- Keep local memory private unless the user exports or connects a backend.'
+  ];
+};
+
 export default function App() {
   const hydratedState = useMemo(loadLocalState, []);
   const [activeView, setActiveView] = useState<ActiveView>('Home');
@@ -137,10 +157,7 @@ export default function App() {
       `Request: ${cleanPrompt}`,
       '',
       'Drafted output:',
-      '- Clarify the immediate outcome needed.',
-      '- Break the request into execution steps.',
-      '- Queue any external send, publish, sync, billing, or account-changing action for approval first.',
-      '- Keep local memory private unless the user exports or connects a backend.',
+      ...getRoleGuidance(role),
       '',
       gestaltConnection?.status === 'Connected'
         ? 'Gestalt Visions is locally approved for staged handoffs. No external sync is performed from this prototype.'
@@ -352,7 +369,8 @@ export default function App() {
           <h2>PLAN • ORGANIZE • APPROVE</h2>
           <p className="heroText">
             A local-first executive operating system for creators, founders, freelancers, and small teams.
-            Eva drafts decisions, structures work, stores local memory, and queues risky actions for approval.
+            Eva drafts decisions, structures work, stores local memory, queues risky actions for approval,
+            and now includes a basic video game development agent mode for build-ready game planning.
           </p>
           <div className="heroActions">
             <button className="primaryGlow" onClick={() => setActiveView('Command')} type="button">Start Command</button>
@@ -412,6 +430,7 @@ export default function App() {
                 <li>Review pending approvals ({pendingApprovals})</li>
                 <li>Advance active projects ({activeProjects})</li>
                 <li>Close open tasks ({openTasks})</li>
+                <li>Use Video Game Development mode for game loops, mechanics, prototypes, inputs, and QA plans</li>
                 <li>{gestaltConnection?.status === 'Connected' ? 'Prepare approved Gestalt handoff' : 'Approve or reject Gestalt connection'}</li>
               </ul>
             </article>
@@ -465,7 +484,7 @@ export default function App() {
               <label>
                 Command
                 <textarea
-                  placeholder="Ask Eva to plan, draft, organize, research, or prepare an approval."
+                  placeholder="Ask Eva to plan, draft, organize, research, prepare an approval, or structure a game build."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                 />
