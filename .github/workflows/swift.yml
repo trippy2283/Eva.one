@@ -1,25 +1,11 @@
 name: iOS CI
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "GoodThenIm/**"
-      - "GoodThenIm.xcodeproj/**"
-      - "GoodThenIm.xcworkspace/**"
-      - ".github/workflows/swift.yml"
-  pull_request:
-    branches: ["main"]
-    paths:
-      - "GoodThenIm/**"
-      - "GoodThenIm.xcodeproj/**"
-      - "GoodThenIm.xcworkspace/**"
-      - ".github/workflows/swift.yml"
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build iOS app when an Xcode project exists
+    name: Manual iOS build check
     runs-on: macos-latest
 
     steps:
@@ -32,28 +18,12 @@ jobs:
         run: |
           set -euo pipefail
 
-          PROJECT_PATH=""
-          WORKSPACE_PATH=""
-
-          if [[ -d "GoodThenIm.xcodeproj" ]]; then
-            PROJECT_PATH="GoodThenIm.xcodeproj"
-          elif [[ -d "GoodThenIm/GoodThenIm.xcodeproj" ]]; then
-            PROJECT_PATH="GoodThenIm/GoodThenIm.xcodeproj"
-          else
-            PROJECT_PATH="$(find . -maxdepth 4 -name '*.xcodeproj' -type d | head -n 1 || true)"
-          fi
-
-          if [[ -d "GoodThenIm.xcworkspace" ]]; then
-            WORKSPACE_PATH="GoodThenIm.xcworkspace"
-          elif [[ -d "GoodThenIm/GoodThenIm.xcworkspace" ]]; then
-            WORKSPACE_PATH="GoodThenIm/GoodThenIm.xcworkspace"
-          else
-            WORKSPACE_PATH="$(find . -maxdepth 4 -name '*.xcworkspace' -type d | head -n 1 || true)"
-          fi
+          PROJECT_PATH=$(find . -maxdepth 4 -name '*.xcodeproj' -type d | head -n 1 || true)
+          WORKSPACE_PATH=$(find . -maxdepth 4 -name '*.xcworkspace' -type d | head -n 1 || true)
 
           if [[ -z "$PROJECT_PATH" && -z "$WORKSPACE_PATH" ]]; then
             echo "has_ios=false" >> "$GITHUB_OUTPUT"
-            echo "No Xcode project or workspace found. Skipping iOS build instead of failing the whole repo."
+            echo "No Xcode project or workspace found. Manual iOS build skipped."
             exit 0
           fi
 
@@ -71,57 +41,6 @@ jobs:
         if: steps.ios.outputs.has_ios == 'true'
         run: xcodebuild -version
 
-      - name: Resolve scheme
-        if: steps.ios.outputs.has_ios == 'true'
-        id: scheme
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if [[ -n "${{ steps.ios.outputs.workspace_path }}" ]]; then
-            LIST_ARGS=(-workspace "${{ steps.ios.outputs.workspace_path }}")
-          else
-            LIST_ARGS=(-project "${{ steps.ios.outputs.project_path }}")
-          fi
-
-          xcodebuild -list -json "${LIST_ARGS[@]}" > /tmp/xcode-list.json
-
-          SCHEME=$(python3 - <<'PY'
-          import json
-          with open('/tmp/xcode-list.json', 'r', encoding='utf-8') as f:
-              data = json.load(f)
-          schemes = data.get('workspace', {}).get('schemes') or data.get('project', {}).get('schemes') or []
-          if 'GoodThenIm' in schemes:
-              print('GoodThenIm')
-          elif schemes:
-              print(schemes[0])
-          PY
-          )
-
-          if [[ -z "$SCHEME" ]]; then
-            echo "No shared Xcode scheme found. Open the project in Xcode and mark the app scheme as shared." >&2
-            exit 1
-          fi
-
-          echo "scheme=$SCHEME" >> "$GITHUB_OUTPUT"
-          echo "Using scheme: $SCHEME"
-
-      - name: Resolve simulator destination
-        if: steps.ios.outputs.has_ios == 'true'
-        id: simulator
-        shell: bash
-        run: |
-          set -euo pipefail
-          DESTINATION=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ {print $2; exit}')
-
-          if [[ -z "${DESTINATION:-}" ]]; then
-            echo "No available iPhone simulator found." >&2
-            exit 1
-          fi
-
-          echo "destination=id=$DESTINATION" >> "$GITHUB_OUTPUT"
-          echo "Using simulator destination id=$DESTINATION"
-
       - name: Build iOS Simulator
         if: steps.ios.outputs.has_ios == 'true'
         shell: bash
@@ -134,15 +53,26 @@ jobs:
             CONTAINER_ARGS=(-project "${{ steps.ios.outputs.project_path }}")
           fi
 
+          SCHEME=$(xcodebuild -list "${CONTAINER_ARGS[@]}" | awk '/Schemes:/ {flag=1; next} flag && NF {print $1; exit}')
+          if [[ -z "$SCHEME" ]]; then
+            echo "No shared scheme found. Open the project in Xcode and share the scheme before running iOS CI." >&2
+            exit 1
+          fi
+
+          DESTINATION=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ {print $2; exit}')
+          if [[ -z "$DESTINATION" ]]; then
+            echo "No available iPhone simulator found." >&2
+            exit 1
+          fi
+
           xcodebuild \
             "${CONTAINER_ARGS[@]}" \
-            -scheme "${{ steps.scheme.outputs.scheme }}" \
-            -destination "${{ steps.simulator.outputs.destination }}" \
+            -scheme "$SCHEME" \
+            -destination "id=$DESTINATION" \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             build
 
       - name: Skip summary
         if: steps.ios.outputs.has_ios != 'true'
-        run: |
-          echo "iOS build skipped: no Xcode project/workspace is currently present in this repository."
+        run: echo "iOS CI is clean: there is no Xcode project/workspace to build right now."
