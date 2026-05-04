@@ -18,6 +18,11 @@ Path: `web/`
   - Mark connection state only after user approval
   - Prepare approved project handoff packages
   - Log sync timestamps after approved handoff
+- Basic Video Game Development agent mode:
+  - Turns game ideas into build-ready plans
+  - Structures gameplay loops, mechanics, HUD, input support, save systems, QA tasks, and prototype tasks
+  - Keeps IP-safe rules for fictional vehicles, fictional brands, and original assets
+  - Supports planning for touch, keyboard, and controller-ready gameplay
 - Honest integration status messaging (no fake completion claims)
 
 ### Run locally
@@ -32,6 +37,10 @@ npm run dev
 cd web
 npm run build
 ```
+
+## EvaOneAI Strategy Notes
+- `AGENTS.md` contains the full Codex / builder operating guide for EvaOneAI.
+- `docs/evaone-ai-reach-and-game-agent.md` contains the updated direction for EvaOneAI outreach, enterprise workflow support, and the new basic Video Game Development agent.
 
 ## iOS App
 Legacy iOS Swift files remain under `GoodThenIm/`.
