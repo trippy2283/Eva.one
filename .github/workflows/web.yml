@@ -1,36 +1,45 @@
 name: Web CI
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "web/**"
-      - ".github/workflows/web.yml"
-  pull_request:
-    branches: ["main"]
-    paths:
-      - "web/**"
-      - ".github/workflows/web.yml"
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build EvaOneAI web app
+    name: Manual EvaOneAI web build check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect web app
+        id: web
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -f "web/package.json" ]]; then
+            echo "has_web=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_web=false" >> "$GITHUB_OUTPUT"
+            echo "No web/package.json found. Web build skipped."
+          fi
+
       - name: Setup Node
+        if: steps.web.outputs.has_web == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install dependencies
+        if: steps.web.outputs.has_web == 'true'
         working-directory: web
         run: npm install
 
       - name: Build
+        if: steps.web.outputs.has_web == 'true'
         working-directory: web
         run: npm run build
+
+      - name: Skip summary
+        if: steps.web.outputs.has_web != 'true'
+        run: echo "Web CI skipped cleanly because the web app folder is missing."
