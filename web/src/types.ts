@@ -6,7 +6,8 @@ export type RoleMode =
   | 'Research Analyst'
   | 'Operations Coordinator'
   | 'App Connector'
-  | 'Agentic AI Orchestrator';
+  | 'Agentic AI Orchestrator'
+  | 'Video Game Development';
 
 export type ActionStatus =
   | 'Done'
