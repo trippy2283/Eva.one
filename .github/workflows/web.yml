@@ -1,0 +1,38 @@
+name: Web CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "web/**"
+      - ".github/workflows/web.yml"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "web/**"
+      - ".github/workflows/web.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build EvaOneAI web app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: web
+        run: npm install
+
+      - name: Build
+        working-directory: web
+        run: npm run build
