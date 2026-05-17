@@ -55,6 +55,8 @@ const loadLocalState = (): AppLocalState => {
   if (!storage) return defaultLocalState;
 
   const raw = storage.getItem(STORAGE_KEY);
+const loadLocalState = (): AppLocalState => {
+  const raw = window.localStorage.getItem(STORAGE_KEY);
   if (!raw) return defaultLocalState;
 
   try {
@@ -65,6 +67,11 @@ const loadLocalState = (): AppLocalState => {
       memory: toArray<MemoryItem>(parsed.memory),
       approvals: toArray<ApprovalRequest>(parsed.approvals),
       logs: toArray<ActionLog>(parsed.logs)
+      tasks: parsed.tasks ?? [],
+      projects: parsed.projects ?? [],
+      memory: parsed.memory ?? [],
+      approvals: parsed.approvals ?? [],
+      logs: parsed.logs ?? []
     };
   } catch {
     return defaultLocalState;
@@ -72,6 +79,7 @@ const loadLocalState = (): AppLocalState => {
 };
 
 export default function App() {
+  const hydratedState = useMemo(loadLocalState, []);
   const [activeView, setActiveView] = useState<'Home' | 'Command' | 'Tasks' | 'Projects' | 'Memory' | 'Settings'>('Home');
   const [role, setRole] = useState<RoleMode>('Chief of Staff');
   const [prompt, setPrompt] = useState('');
@@ -82,6 +90,11 @@ export default function App() {
   const [approvals, setApprovals] = useState<ApprovalRequest[]>(defaultLocalState.approvals);
   const [logs, setLogs] = useState<ActionLog[]>(defaultLocalState.logs);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [tasks, setTasks] = useState<Task[]>(hydratedState.tasks);
+  const [projects, setProjects] = useState<Project[]>(hydratedState.projects);
+  const [memory, setMemory] = useState<MemoryItem[]>(hydratedState.memory);
+  const [approvals, setApprovals] = useState<ApprovalRequest[]>(hydratedState.approvals);
+  const [logs, setLogs] = useState<ActionLog[]>(hydratedState.logs);
 
   const pendingApprovals = useMemo(() => approvals.filter((a) => a.status === 'Pending').length, [approvals]);
 
@@ -104,6 +117,9 @@ export default function App() {
     const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
     storage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
   }, [isHydrated, tasks, projects, memory, approvals, logs]);
+    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+  }, [tasks, projects, memory, approvals, logs]);
 
   const addLog = (summary: string, status: ActionLog['status']) => {
     setLogs((prev) => [{ id: localId(), summary, status, createdAt: new Date().toISOString() }, ...prev]);
