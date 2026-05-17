@@ -6,7 +6,8 @@ export type RoleMode =
   | 'Research Analyst'
   | 'Operations Coordinator'
   | 'App Connector'
-  | 'Agentic AI Orchestrator';
+  | 'Agentic AI Orchestrator'
+  | 'Video Game Development';
 
 export type ActionStatus =
   | 'Done'
@@ -38,7 +39,14 @@ export interface MemoryItem {
   id: string;
   title: string;
   content: string;
-  category: 'User preference' | 'Business context' | 'Project context' | 'System instruction';
+  category:
+    | 'User preference'
+    | 'Business context'
+    | 'Project context'
+    | 'Writing style'
+    | 'Creative direction'
+    | 'Contact/context note'
+    | 'System instruction';
   isActive: boolean;
 }
 
@@ -47,6 +55,9 @@ export interface ApprovalRequest {
   title: string;
   description: string;
   status: 'Pending' | 'Approved' | 'Rejected';
+  actionType: 'External Send' | 'Integration Connect' | 'Integration Handoff';
+  integrationId?: string;
+  payload?: string;
 }
 
 export interface ActionLog {
@@ -54,4 +65,20 @@ export interface ActionLog {
   summary: string;
   status: ActionStatus;
   createdAt: string;
+}
+
+export interface AISession {
+  id: string;
+  role: RoleMode;
+  title: string;
+  summary: string;
+  createdAt: string;
+}
+
+export interface Integration {
+  id: string;
+  provider: 'Gestalt Visions';
+  status: 'Disconnected' | 'Pending Approval' | 'Connected';
+  scopes: string[];
+  lastSyncAt?: string;
 }

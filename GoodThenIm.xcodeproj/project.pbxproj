@@ -15,6 +15,8 @@
     9F8E7D6C5B4A3928 /* EvaOneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8E7D6C5B4A3927; };
     28396FAC5D107EB4 /* EvaOneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2CE83967154BDA; };
     06512DF7C83BA9E4 /* EvaOneUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB608AFD351249; };
+    28396FAC5D107EB4 /* GoodThenImTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2CE83967154BDA; };
+    06512DF7C83BA9E4 /* GoodThenImUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB608AFD351249; };
     620BCE795A1843DF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABE39C71F58046D; };
     /* End PBXBuildFile section */
 
@@ -31,6 +33,10 @@
     7CEB608AFD351249 /* EvaOneUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EvaOneUITests.swift"; sourceTree = "<group>"; };
     B7E6AF3CD5902841 /* EvaOneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EvaOneTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
     6DB2CE41A70359F8 /* EvaOneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EvaOneUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+    0F2CE83967154BDA /* GoodThenImTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoodThenImTests.swift"; sourceTree = "<group>"; };
+    7CEB608AFD351249 /* GoodThenImUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoodThenImUITests.swift"; sourceTree = "<group>"; };
+    B7E6AF3CD5902841 /* GoodThenImTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GoodThenImTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+    6DB2CE41A70359F8 /* GoodThenImUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GoodThenImUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
     2ABE39C71F58046D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
     /* End PBXFileReference section */
 
@@ -303,7 +309,7 @@
         GENERATE_INFOPLIST_FILE = YES;
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
         INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-        IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+        IPHONEOS_DEPLOYMENT_TARGET = 17.0;
         LD_RUNPATH_SEARCH_PATHS = (
           "$(inherited)",
           "@executable_path/Frameworks",
@@ -355,7 +361,7 @@
         GENERATE_INFOPLIST_FILE = YES;
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
         INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-        IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+        IPHONEOS_DEPLOYMENT_TARGET = 17.0;
         LD_RUNPATH_SEARCH_PATHS = (
           "$(inherited)",
           "@executable_path/Frameworks",
@@ -385,7 +391,7 @@
         CODE_SIGN_STYLE = Automatic;
         CURRENT_PROJECT_VERSION = 1;
         GENERATE_INFOPLIST_FILE = YES;
-        IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+        IPHONEOS_DEPLOYMENT_TARGET = 17.0;
         MARKETING_VERSION = 1.0;
         PRODUCT_BUNDLE_IDENTIFIER = "com.mentallycreativestudios.evaone.tests";
         PRODUCT_NAME = "$(TARGET_NAME)";
@@ -407,7 +413,7 @@
         CODE_SIGN_STYLE = Automatic;
         CURRENT_PROJECT_VERSION = 1;
         GENERATE_INFOPLIST_FILE = YES;
-        IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+        IPHONEOS_DEPLOYMENT_TARGET = 17.0;
         MARKETING_VERSION = 1.0;
         PRODUCT_BUNDLE_IDENTIFIER = "com.mentallycreativestudios.evaone.tests";
         PRODUCT_NAME = "$(TARGET_NAME)";

@@ -1,0 +1,21 @@
+{
+  "name": "Eva.One Codespace",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "forwardPorts": [4173],
+  "portsAttributes": {
+    "4173": {
+      "label": "Eva.One Web Preview",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "postCreateCommand": "cd web && npm install",
+  "postAttachCommand": "cd web && npm run dev -- --host 0.0.0.0 --port 4173",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}
