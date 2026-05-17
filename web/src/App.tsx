@@ -30,6 +30,8 @@ type AppLocalState = {
   logs: ActionLog[];
 };
 
+const toArray = <T,>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : []);
+
 const defaultLocalState: AppLocalState = {
   tasks: [],
   projects: [],
@@ -38,6 +40,21 @@ const defaultLocalState: AppLocalState = {
   logs: []
 };
 
+const getLocalStorage = (): Storage | null => {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+};
+
+const loadLocalState = (): AppLocalState => {
+  const storage = getLocalStorage();
+  if (!storage) return defaultLocalState;
+
+  const raw = storage.getItem(STORAGE_KEY);
 const loadLocalState = (): AppLocalState => {
   const raw = window.localStorage.getItem(STORAGE_KEY);
   if (!raw) return defaultLocalState;
@@ -45,6 +62,11 @@ const loadLocalState = (): AppLocalState => {
   try {
     const parsed = JSON.parse(raw) as Partial<AppLocalState>;
     return {
+      tasks: toArray<Task>(parsed.tasks),
+      projects: toArray<Project>(parsed.projects),
+      memory: toArray<MemoryItem>(parsed.memory),
+      approvals: toArray<ApprovalRequest>(parsed.approvals),
+      logs: toArray<ActionLog>(parsed.logs)
       tasks: parsed.tasks ?? [],
       projects: parsed.projects ?? [],
       memory: parsed.memory ?? [],
@@ -62,6 +84,12 @@ export default function App() {
   const [role, setRole] = useState<RoleMode>('Chief of Staff');
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
+  const [tasks, setTasks] = useState<Task[]>(defaultLocalState.tasks);
+  const [projects, setProjects] = useState<Project[]>(defaultLocalState.projects);
+  const [memory, setMemory] = useState<MemoryItem[]>(defaultLocalState.memory);
+  const [approvals, setApprovals] = useState<ApprovalRequest[]>(defaultLocalState.approvals);
+  const [logs, setLogs] = useState<ActionLog[]>(defaultLocalState.logs);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [tasks, setTasks] = useState<Task[]>(hydratedState.tasks);
   const [projects, setProjects] = useState<Project[]>(hydratedState.projects);
   const [memory, setMemory] = useState<MemoryItem[]>(hydratedState.memory);
@@ -71,6 +99,24 @@ export default function App() {
   const pendingApprovals = useMemo(() => approvals.filter((a) => a.status === 'Pending').length, [approvals]);
 
   useEffect(() => {
+    const hydratedState = loadLocalState();
+    setTasks(hydratedState.tasks);
+    setProjects(hydratedState.projects);
+    setMemory(hydratedState.memory);
+    setApprovals(hydratedState.approvals);
+    setLogs(hydratedState.logs);
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const storage = getLocalStorage();
+    if (!storage) return;
+
+    const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
+    storage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+  }, [isHydrated, tasks, projects, memory, approvals, logs]);
     const stateToPersist: AppLocalState = { tasks, projects, memory, approvals, logs };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
   }, [tasks, projects, memory, approvals, logs]);
