@@ -1,0 +1,47 @@
+/* CSS for Radial Navigation Wheel */
+
+.radial-wheel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: radial-gradient(circle, rgba(10,8,28,0.85) 60%, transparent 100%);
+  border: 2px solid rgba(10,8,28,0.45);
+  border-radius: 50%;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.5), 0 0 20px rgba(163, 0, 255, 0.5);
+}
+
+.center-node {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00F2FF;
+  text-align: center;
+  padding: 10px;
+  border-radius: 50%;
+  background: rgba(10,8,28,0.45);
+  box-shadow: 0 0 10px rgba(163, 0, 255, 0.5);
+  margin-bottom: 20px;
+}
+
+.left-branch, .right-branch {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.glowing-button {
+  background-color: transparent;
+  color: #A300FF;
+  border: 1px solid #00F2FF;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 5px;
+}
+
+.glowing-button:hover {
+  color: #00F2FF;
+  background: rgba(163, 0, 255, 0.2);
+  box-shadow: 0 0 15px #A300FF;
+}
